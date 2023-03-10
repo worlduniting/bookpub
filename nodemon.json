@@ -1,0 +1,10 @@
+{
+    "watch": [
+        "manuscript"
+    ],
+    "ext": "md,mdx,js,json,html,css,yml",
+    "ignore": [
+        "node_modules"
+    ],
+    "exec": "npm run build"
+}

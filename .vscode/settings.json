@@ -1,0 +1,19 @@
+{
+    "markdownlint.config": {
+        "MD041": false,
+        "MD013": {
+            "line_length": 9999,
+            "code_blocks": false,
+            "tables": false,
+            "allowed_elements": [
+                "!--"
+            ]
+        },
+        "MD030": {
+            "front_matter_title": "YAML",
+            "title:": "The front matter block must start and end with `---`",
+            "front_matter_title_2": "regex",
+            "front_matter_regex": "^---(\\n|.)+?---$"
+        }
+    }
+}
