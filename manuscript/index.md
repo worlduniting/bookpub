@@ -1,19 +1,11 @@
-<html>
-<body>
+:html
+:body
 
-# My Test Document
+# Index file
 
-Here is some content.
-
-@include more-content.md
-@include sub/sub-content.md
-
-### GFM Example
-```javascript
-    function () {
-        this is a function
-    }
-    // Here's a comment
-```
+This is the first file.
 
 @include close.md
+
+::body
+::html

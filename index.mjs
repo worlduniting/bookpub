@@ -1,3 +1,3 @@
-import convertGfmToHtml from './lib/convertGfmToHtml.mjs';
+import convert from './lib/convert.mjs';
 
-convertGfmToHtml();
+convert();
