@@ -1,0 +1,25 @@
+<div class="frontcover">
+    <img src="./theme/media/canvas.jpg" />
+    <h1>Cascading Style Sheets</h1>
+    <h2>Designing for the Web</h2>
+    <h3>Third Edition</h3>
+    <p>Sample document</p>
+</div>
+
+<div class="halftitlepage">
+    <h1 class="no-toc">Cascading Style Sheets</h1>
+    <h2 class="no-toc">Designing for the Web</h2>
+    <h3 class="no-toc">Third Edition</h3>
+</div>
+
+<div class="titlepage">
+    <h1 class="no-toc">Cascading Style Sheets</h1>
+    <h2 class="no-toc">Designing for the Web</h2>
+    <h3 class="no-toc">Third Edition</h3>
+    <p class="no-toc">Hikon Wium Lie<br />Bert Bos</p>
+    <!-- also, the publisher's name would typically be printed here -->
+</div>
+
+<div class="imprint">
+    <p>Copyright &copy; 2005 Hikon Wium Lie and Bert Bos</p>
+</div>
