@@ -6,5 +6,5 @@
     "ignore": [
         "node_modules"
     ],
-    "exec": "npm run build"
+    "exec": "npm run build && prince build/html/index.html"
 }

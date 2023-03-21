@@ -11,11 +11,21 @@
       href="theme/css/styles.css"
     />
   </head>
-  <body class="clickup-chrome-ext_installed">
+<body>
 
-    @include frontmatter/index.md
-    @include mainmatter/index.md
-    @include backmatter/index.md
+  <section>
+      @include frontmatter/index.md
+  </section>
+
+  <section style="counter-reset: page 1">
+      @include mainmatter/index.md
+  </section>
+
+  <section>
+      @include backmatter/index.md
+  </section>
 
 </body>
 </html>
+
+* relace --- with &mdash;
