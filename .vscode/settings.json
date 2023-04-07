@@ -14,6 +14,16 @@
             "title:": "The front matter block must start and end with `---`",
             "front_matter_title_2": "regex",
             "front_matter_regex": "^---(\\n|.)+?---$"
-        }
-    }
+        },
+        "MD033":false,
+        "MD007": {
+            "indent": 4
+        },
+        "MD024":false
+    },
+    "editor.hover.delay": 1500,
+    "workbench.colorTheme": "Default Dark+",
+    "editor.fontFamily": "Inter, Monaco, 'Courier New', monospace",
+    "editor.fontSize": 14,
+    "editor.fontWeight": "500"
 }

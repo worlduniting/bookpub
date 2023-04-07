@@ -1,7 +1,0 @@
----
- title: "My Book"
- author: "Rev. Dave Thompson"
- isbn: 9023890424159
- toc: true
- files:
-   - index.md
