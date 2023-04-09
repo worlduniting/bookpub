@@ -123,7 +123,7 @@ function runNodemon(outputType) {
         console.log(`Using default Nodemon settings with outputType: ${outputType}.`);
         nodemonConfig = {
             script: __filename,
-            ext: outputType === 'pdf' ? 'md,mdx,js,ejs,json,html,css,yaml' : 'md,mdx,js,ejs,json,html,css,yaml',
+            ext: outputType === 'pdf' ? 'md,mdx,js,ejs,json,html,css,scss,yaml' : 'md,mdx,js,ejs,json,html,css,scss,yaml',
             exec: `bookshop build --type ${outputType}`,
             watch: 'manuscript',
         };

@@ -1,5 +1,5 @@
 {
-  "name": "bookshop",
+  "name": "@worlduniting/bookshop",
   "version": "0.2.0",
   "description": "An advanced book typesetting and publishing framework for publishing houses. Bookshop manages a manuscript-to-market toolchain allowing publishing firms and their authors to track one markdown-based manuscript source which can be built into any format, and can be professionally typeset for print with HTML, CSS and Javascript.",
   "main": "index.js",
