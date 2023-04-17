@@ -124,7 +124,7 @@ function runNodemon(outputType) {
         nodemonConfig = {
             script: __filename,
             ext: outputType === 'pdf' ? 'md,mdx,js,ejs,json,html,css,scss,yaml' : 'md,mdx,js,ejs,json,html,css,scss,yaml',
-            exec: `bookshop build --type ${outputType}`,
+            exec: `bookpub build --type ${outputType}`,
             watch: 'manuscript',
         };
     }
