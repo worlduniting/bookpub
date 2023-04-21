@@ -20,6 +20,7 @@ const program = new Command();
 program.version(packageJson.version);
 
 async function buildHtml(manuscriptDir, outputDir, outputType) {
+    console.log(`Your convert params are: ${manuscriptDir}, ${outputDir}, ${outputType}`)
     await convert(manuscriptDir, outputDir, outputType);
 }
 
@@ -42,7 +43,6 @@ program
     .description('Build the output from the manuscript markdown files')
     .action(async (options) => {
         console.log(`Building ${options.type.toUpperCase()}...`);
-
         if (options.type === 'html') {
             await buildHtml(manuscriptDir, path.join(process.cwd(), 'build', 'html'), options.type);
         } else if (options.type === 'pdf') {
@@ -58,7 +58,6 @@ program
     .description('Run the development server with live-reloading')
     .action(async (options) => {
         console.log(`Running Nodemon and Webpack Server for ${options.type.toUpperCase()}...`);
-
         if (options.type === 'html') {
             await buildHtml(manuscriptDir, path.join(process.cwd(), 'build', 'html'), options.type);
             await runWebpackDevServerAsync('html');

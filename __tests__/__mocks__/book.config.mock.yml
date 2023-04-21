@@ -1,0 +1,49 @@
+# Settings for the book which can be called within the book source files
+
+# ----------------
+# Book Meta Data
+#   Can be used in EJS: <%= meta.title %>
+# ________________
+meta:
+  # add any additional data your want
+  #   e.g. - pagecount: 221 (access with <%= meta.pagecount %>)
+  title: Becoming HUMAN
+  subtitle: A Mountaintop Experience
+  author: Rev Dave Thompson
+  isbn-13:
+  isbn-10:
+  publisher: World Uniting Press
+  date: 2013-03-31
+  language: en
+  lccn:
+
+# -------------------
+# BookPub Settings
+# ___________________
+settings:
+  # This is the entry point for the manuscript source
+  # Can also include an array of files [file1, file2, etc.]
+  entryfile: index.md.ejs
+
+# ---------------------------
+# Embedded Javascript Syntax
+#   https://ejs.co/
+# ___________________________
+ejs-lint-options:
+  # Allow usage of await inside template [true/false]
+  await: true
+  # Allow old (pre-EJS v3) preprocessor-style includes [true/false]
+  preprocessor-include:
+  # Specify a custom delimiter ( i.e. <? instead of <% ) [string]
+  delimiter:
+
+# -----------------------
+# MyST Markdown Parser Settings
+#   https://myst-parser.readthedocs.io/
+# _______________________
+myst-options:
+  enable_extensions:
+    - linkify
+    - html_image
+    - smarty
+    - smartquotes
