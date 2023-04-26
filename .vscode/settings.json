@@ -25,5 +25,6 @@
     "workbench.colorTheme": "Default Dark+",
     "editor.fontFamily": "Inter, Monaco, 'Courier New', monospace",
     "editor.fontSize": 14,
-    "editor.fontWeight": "500"
+    "editor.fontWeight": "500",
+    "editor.wordWrap": "bounded"
 }

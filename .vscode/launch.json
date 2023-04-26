@@ -1,0 +1,24 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Debug CLI",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "program": "${workspaceFolder}/cli.js",
+            "args": [
+                "build",
+                "-t",
+                "html"
+            ],
+            "cwd": "${workspaceFolder}",
+            "runtimeArgs": [
+                "--experimental-specifier-resolution=node"
+            ],
+            "nodeVersionHint": 14
+        }
+    ]
+}

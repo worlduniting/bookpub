@@ -9,31 +9,40 @@ import path from 'path';
 import nodemon from 'nodemon';
 import { readFileSync, existsSync } from 'fs';
 import { spawn } from 'child_process';
+import chalk from 'chalk';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const packageJson = JSON.parse(fs.readFileSync(path.join(__dirname, 'package.json'), 'utf-8'));
 
 const manuscriptDir = path.join(process.cwd(), 'manuscript');
+const manRel = path.relative(process.cwd(), manuscriptDir);
 
 const program = new Command();
 program.version(packageJson.version);
 
 async function buildHtml(manuscriptDir, outputDir, outputType) {
+    const outRel = path.relative(process.cwd(), outputDir);
+    console.log(`    Manuscript Location: ${chalk.yellowBright(`/${manRel}/`)}\n    Build Output Location: ${chalk.yellowBright(`/${outRel}/`)}\n\n`)
     await convert(manuscriptDir, outputDir, outputType);
 }
 
 async function buildPdf(manuscriptDir, outputDir, outputType) {
     await buildHtml(manuscriptDir, outputDir, outputType);
 
-    // Run the prince command-line tool
-    const prince = spawn('prince', ['build/pdf/index.html'], { stdio: 'inherit' });
+    try {
+        const pdfOutDirRel = path.relative(process.cwd(), outputDir);
+        // Run the prince command-line tool
+        console.log(`  10. Building your Print PDF to ${chalk.yellowBright(`/${pdfOutDirRel}/index.pdf`)}\n `);
+        const prince = spawn('prince', ['build/pdf/index.html'], { stdio: 'inherit' });
+        prince.on('error', (error) => {
+            console.error(`Error: ${error.message}`);
+        });
 
-    prince.on('error', (error) => {
-        console.error(`Error: ${error.message}`);
-    });
-
-    return prince;
+        return prince;
+    } catch (error) {
+        console.error(chalk.redBright('  Bummer. We couldn\'t build your pdf, because:'), chalk.redBright(error + '\n'));
+    }
 }
 
 program
@@ -41,8 +50,7 @@ program
     .option('-t, --type <type>', 'Specify the output type (html or pdf)', 'html')
     .description('Build the output from the manuscript markdown files')
     .action(async (options) => {
-        console.log(`Building ${options.type.toUpperCase()}...`);
-
+        console.log(`\nBuilding ${options.type.toUpperCase()} Format...\n`);
         if (options.type === 'html') {
             await buildHtml(manuscriptDir, path.join(process.cwd(), 'build', 'html'), options.type);
         } else if (options.type === 'pdf') {
@@ -50,6 +58,11 @@ program
         } else {
             console.error('Invalid output type specified. Use either "html" or "pdf".');
         }
+        console.log(chalk.greenBright(`
+    ---------------------------
+        Yay! All Finished!!
+    ---------------------------
+        `));
     });
 
 program
@@ -57,8 +70,7 @@ program
     .option('-t, --type <type>', 'Specify the output type (html or pdf)', 'html')
     .description('Run the development server with live-reloading')
     .action(async (options) => {
-        console.log(`Running Nodemon and Webpack Server for ${options.type.toUpperCase()}...`);
-
+        console.log(`\nRunning Nodemon and Webpack Server for ${options.type.toUpperCase()}...\n`);
         if (options.type === 'html') {
             await buildHtml(manuscriptDir, path.join(process.cwd(), 'build', 'html'), options.type);
             await runWebpackDevServerAsync('html');
@@ -79,7 +91,7 @@ function runNodemonAsync(outputType) {
     });
 }
 
-// Run the webpack server using the user's webpack.config.js
+// Run the webpack server using default settings
 function runWebpackDevServerAsync(outputType) {
     const server = spawn(
         'npx',
@@ -123,8 +135,8 @@ function runNodemon(outputType) {
         console.log(`Using default Nodemon settings with outputType: ${outputType}.`);
         nodemonConfig = {
             script: __filename,
-            ext: outputType === 'pdf' ? 'md,mdx,js,ejs,json,html,css,yaml' : 'md,mdx,js,ejs,json,html,css,yaml',
-            exec: `bookshop build --type ${outputType}`,
+            ext: outputType === 'pdf' ? 'md,mdx,js,ejs,json,html,css,scss,yaml' : 'md,mdx,js,ejs,json,html,css,scss,yaml',
+            exec: `bookpub build --type ${outputType}`,
             watch: 'manuscript',
         };
     }
