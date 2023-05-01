@@ -92,10 +92,18 @@ function runNodemonAsync(outputType) {
 }
 
 // Run the webpack server using default settings
-function runWebpackDevServerAsync(outputType) {
+async function runWebpackDevServerAsync(outputType) {
+    // Find the absolute path to the webpack-cli binary inside the bookpub package
+    const bookpubNodeModules = path.join(__dirname, 'node_modules');
+    const webpackCliPath = path.join(bookpubNodeModules, 'webpack-cli', 'bin', 'cli.js');
+
+    // Check if the user's webpack.config.js file exists
+    const userWebpackConfigPath = path.join(process.cwd(), 'webpack.config.js');
+    const configFlag = fs.existsSync(userWebpackConfigPath) ? ['--config', userWebpackConfigPath] : [];
+
     const server = spawn(
-        'npx',
-        ['webpack', 'serve', '--env', `outputType=${outputType}`],
+        'node',
+        [webpackCliPath, 'serve', '--env', `outputType=${outputType}`, ...configFlag],
         { stdio: 'inherit' }
     );
 
