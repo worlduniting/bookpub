@@ -6,9 +6,9 @@
   <img style="text-align: center" alt="BookPub logo header" src="./assets/bookpub-logo.svg">
 </picture>
 
-An advanced book typesetting and publishing framework for publishing houses.
+An advanced book publishing framework for a web-driven world.
 
-**BookPub** manages a manuscript-to-market toolchain, allowing publishing firms and their authors to track one markdown-based manuscript source, which can be built into any format (PDF, EPUB, MOBI, HTML), and can be professionally designed and typeset (for print houses) using HTML, CSS and Javascript Web Standards.
+**BookPub** manages a manuscript-to-market toolchain, allowing publishing firms, authors and other stakeholders to manage one markdown-based manuscript source, which can be built into any format (PDF, EPUB, MOBI, HTML), and can be professionally designed and typeset (for print houses) using HTML, CSS and Javascript Web Standards.
 
 ## Features
 
@@ -18,7 +18,7 @@ An advanced book typesetting and publishing framework for publishing houses.
       Easy-to-read, easy-to-write using the industry standard, Markdown, for authoring content.
     * **Lot's of Ready Made Apps/Tools.**
 
-      Because markdown is ubiquitous for authoring content, there are already loads of tools and apps out there. But you can use any plain text editor (or Code Editor)
+      Because markdown is ubiquitous for authoring content, there are already loads of tools and apps out there. That said, you can use any plain text editor (or Code Editor)
     * **Easy to Manage Edits & Versions.**
 
       Because it's plain text, we can use the most robust versioning software out there. We recommend github.com, but you can use any versioning platform.
@@ -29,7 +29,7 @@ An advanced book typesetting and publishing framework for publishing houses.
 
       * Use any NPM package or javascript library, to add a world of possibilities to your book
 
-      * Use custom layouts and includes to reuse parts of your manuscript
+      * Use custom layouts and includes to reuse parts of your manuscript anywhere
   * **Automatic Conversion of quotes and en/em-dashes**
     * Using Smartypants, all quotes and en/em-dashes will be automatically converted to curly (left/right) quotes and the relevant UTF-8 Codes/Typeset for en/em-dashes
   * **Multiple Formats**
@@ -42,7 +42,7 @@ An advanced book typesetting and publishing framework for publishing houses.
 
   * From the command line:
 
-    `npm install BookPub`
+    `npm install bookpub`
 
 ### Install PrinceXML (to build PDFs)
 
@@ -67,10 +67,10 @@ bookpub-project
   |- assets/                # Media assets (illustrator, photoshop, etc.)
   |- build/                 # Built book formats (pdf, html, epub)
   |- manuscript/            # Manuscript source
-    |-- index.md.ejs        # Entryfile for your manuscript
+    |-- index.md.ejs        # Starting-point ("entryfile") for your manuscript
     |-- frontmatter/        # Frontmatter content (titlepage, preface, etc.)
     |-- mainmatter/         # Main content (chapters, etc.)
-    |-- backmatter/         # Backmatter content (author's note, bibliography)
+    |-- backmatter/         # Backmatter content (author's note, bibliography, index)
     |-- theme/              # Theme & Design elements
       |--- css/             # CSS for each format
       |--- js/              # Javascript files

@@ -1,0 +1,49 @@
+<!--?xml version="1.0" encoding="UTF-8"?-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252" />
+<title><%= meta.title %>: <%= meta.subtitle %></title>
+<meta name="author" content="Hikon Wium Lie" />
+<link rel="stylesheet" src="theme/css/styles.<%= outputType %>.css" />
+<link rel="stylesheet" type="application/vnd.adobe-page-template+xml" href="assets/css/page-template.xpgt" />
+</head>
+
+<body>
+<!-- A page for the well-deserved PrinceXML logo -->
+<div class="blankpage"></div>
+
+<!-- Front Section -->
+<section>
+<%- include('./frontmatter/1_title.md.ejs'); %>
+<%- include('./frontmatter/2_dedication.md.ejs'); %>
+</section>
+
+<!-- Table of Contents needed for HTML and PDF -->
+<% if (outputType === 'pdf' || 'html') { %>
+<%- include('./frontmatter/toc.md.ejs'); %>
+<% } %>
+
+</section>
+
+<!-- Main Section -->
+<section id="mainmatter" style="counter-reset: page 1">
+
+<%- include('./mainmatter/c1/c1-chapter-one.md.ejs'); %>
+
+<%- include('./mainmatter/c2/c2-chapter-two.md.ejs'); %>
+
+</section>
+
+<!-- Back Section -->
+<section id="back">
+
+<%- include('./backmatter/1_author.md.ejs'); %>
+
+</section>
+
+<script src="bundle.js"></script>
+</body>
+
+</html>
