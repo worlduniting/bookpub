@@ -1,13 +1,13 @@
 {
   "name": "bookpub",
-  "version": "0.2.0",
+  "version": "0.1.0",
   "description": "An advanced book typesetting and publishing framework for publishing houses. Bookpub manages a manuscript-to-market toolchain allowing publishing firms and their authors to track one markdown-based manuscript source which can be built into any format, and can be professionally typeset for print with HTML, CSS and Javascript.",
   "main": "index.js",
   "type": "module",
   "scripts": {
     "build": "node index.js",
     "start": "webpack serve --open",
-    "test": ""
+    "test": "jest"
   },
   "bin": {
     "create-book-project": "create-book-project.js",
@@ -57,5 +57,9 @@
     "webpack": "^5.76.3",
     "webpack-cli": "^5.0.1",
     "webpack-dev-server": "^4.13.1"
+  },
+  "devDependencies": {
+    "execa": "^7.1.1",
+    "jest": "^29.5.0"
   }
 }

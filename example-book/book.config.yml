@@ -8,14 +8,14 @@ meta:
   # add any additional data your want
   #   e.g. - pagecount: 221 (access with <%= meta.pagecount %>)
   title: Publishing With BookPub
-  subtitle: Learning By Example
+  subtitle: A real world guide to book publishing
   author: Rev Dave Thompson
-  isbn-13: 9023890424159
+  isbn-13: 0123456789101
   isbn-10: 0123456789
   publisher: World Uniting Press
-  date: 2013-03-31
+  date: 2023-05-01
   language: en
-  lccn: 2010929905
+  lccn: 0123456789
 
 # -------------------
 # BookPub Settings
@@ -36,25 +36,3 @@ ejs-lint-options:
   preprocessor-include:
   # Specify a custom delimiter ( i.e. <? instead of <% ) [string]
   delimiter:
-
-# -----------------------
-# MyST Markdown Parser Settings
-#   https://myst-parser.readthedocs.io/
-# _______________________
-myst-options:
-  enable_extensions:
-    - linkify
-    - html_image
-    - smarty
-    - smartquotes
-#    - amsmath
-#    - attrs_inline
-#    - colon_fence
-#    - deflist
-#    - dollarmath
-#    - fieldlist
-#    - html_admonition
-#    - replacements
-#    - strikethrough
-#    - substitution
-#    - tasklist
