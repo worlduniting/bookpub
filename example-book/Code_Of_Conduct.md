@@ -4,7 +4,7 @@
 
 ### A CIVIL HUMAN Ethic
 
-As a community of people working together, we agree to abide by the CIVIL HUMAN Ethic
+As a community of people desiring to work together in a peaceful and respectful manner, we agree to abide by the [CIVIL HUMAN Ethic](https://worlduniting.org/a-civil-human-ethic).
 
 **H.U.M.A.N. Conduct**
 
@@ -18,13 +18,13 @@ In order to build and sustain common ground, as we interact within our community
 
 **C.I.V.A.L. Respect**
 
-In order to maintain a peaceful and respectful community, we agree to respect each others' basic human need to exercise our own distinct:
+In order to maintain a peaceful and respectful community, we agree to respect our basic human needs to exercise our own distinct:
 
 * (C)reed concerning those questions that we cannot yet answer or observe,
 * (I)ndependence from physical, verbal or written control, coersion or abuse
 * (V)ote for those who will hold control over us,
 * (I)ntimacy with the person we choose to intimately love,
-* (L)ifestyle and our pursuit of happiness.
+* (L)ifestyle and pursuit of happiness.
 
 ### Enforcement Responsibilities
 
@@ -101,7 +101,11 @@ the community.
 
 ### Attribution
 
-This Code of Conduct is adapted from the [Contributor Covenant][homepage],
+The CIVIL HUMAN Ethic is a code of conduct developed by World Uniting International, an organization dedicated to build human common ground and peace.
+
+For more information, visit [World Uniting International](https://worlduniting.org/a-civil-human-ethic).
+
+This Code of Conduct has additionally been adapted from the [Contributor Covenant][homepage],
 version 2.0, available at
 <https://www.contributor-covenant.org/version/2/0/code_of_conduct.html>.
 
