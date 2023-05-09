@@ -2,7 +2,7 @@
 name: Errata (Error) Report
 description: Report an Edit
 title: "[Edit]: "
-labels: "edit :pencil2:"
+labels: ["edit :pencil2:"]
 body:
 - type: checkboxes
   attributes:
@@ -74,7 +74,10 @@ body:
   validations:
     required: true
 - type: textarea
+  id: suggested-fix
   attributes:
     label: How should it be fixed?
     description: A clear description of your suggested change.
+    placeholder: Tell us your suggested change!
+  validations:
     required: true
