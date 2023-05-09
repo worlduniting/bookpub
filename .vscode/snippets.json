@@ -1,0 +1,18 @@
+{
+    "BookPub OutputType Variable": {
+        "scope": "ejs, html, md.ejs",
+        "prefix": "outv",
+        "body": [
+            "<%= outputType %>$0"
+        ],
+        "description": "Add OutputType Variable"
+    },
+    "BookPub EJS Conditional": {
+        "scope": "ejs, html, md.ejs",
+        "prefix": "cond",
+        "body": [
+            "<!-- ${1:Comment} -->""<% if (${2:Condition [outputType === 'pdf']}) { %>""${3:Code to execute}""<% } %>$0"
+        ],
+        "description": "Add JSX comment"
+    }
+}

@@ -15,25 +15,21 @@ body:
         required: true
       - label: I have searched the [issue tracker](https://www.github.com/worlduniting/bookpub/issues) for a bug report that matches the one I want to file, without success.
         required: true
-
 - type: dropdown
   attributes:
-    label: What is the version of the book/project? (look in colophon)
+    label: What is the version of BookPub? (if known)
     options:
       - ~0.2.0 (current)
       - ~0.1.0
   validations:
-    required: true
-
-
-- type: dropdown
+    required: false
+- type: input
   attributes:
-    label: Book Version
-    description: |
-      What version of your book is this?
+    label: What is the version/edition of the book?
+    description: If you are a reader, it can be found in the colophon (back side of title page) (e.g. 0.1.0)
     placeholder: 0.1.0
   validations:
-    required: true
+    required: false
 - type: checkboxes
   id: book-format
   attributes:
@@ -82,28 +78,3 @@ body:
     placeholder: Please tell us your suggested change!
   validations:
     required: true
-- type: checkboxes
-  attributes:
-    label: Can you help?
-    description: Would you be able to help with this feature? (We always appreciate our communitys support.)
-    options:
-      - label: I would like to help with this feature
-        required: true
-- type: checkboxes
-  id: help-how
-  attributes:
-    label: What aspects can you help with?
-    description: You may select more than one.
-    options:
-      - label: Manuscript Source/Design
-      - label: Documentation
-      - label: "Emotional Support :smirk:"
-      - label: Node/Javascript Development
-      - label: Testing
-- type: input
-  attributes:
-    label: "Contact Info :email:"
-    description: Is there another method of contact you prefer?
-    placeholder: (email), (discord), (cell), (etc.)
-  validations:
-    required: false

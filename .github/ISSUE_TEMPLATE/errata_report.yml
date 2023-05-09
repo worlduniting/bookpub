@@ -15,25 +15,21 @@ body:
         required: true
       - label: I have searched the [issue tracker](https://www.github.com/worlduniting/bookpub/issues) for a bug report that matches the one I want to file, without success.
         required: true
-
 - type: dropdown
   attributes:
-    label: What is the version of the book/project? (look in colophon)
+    label: What is the version of BookPub? (if known)
     options:
       - ~0.2.0 (current)
       - ~0.1.0
   validations:
-    required: true
-
-
-- type: dropdown
+    required: false
+- type: input
   attributes:
-    label: Book Version
-    description: |
-      What version of your book is this?
+    label: What is the version/edition of the book?
+    description: If you are a reader, it can be found in the colophon (back side of title page) (e.g. 0.1.0)
     placeholder: 0.1.0
   validations:
-    required: true
+    required: false
 - type: checkboxes
   id: book-format
   attributes:

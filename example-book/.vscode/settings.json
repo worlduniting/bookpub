@@ -1,0 +1,51 @@
+{
+    "markdownlint.config": {
+        "MD041": false,
+        "MD013": {
+            "line_length": 9999,
+            "code_blocks": false,
+            "tables": false,
+            "allowed_elements": [
+                "!--"
+            ]
+        },
+        "MD030": {
+            "front_matter_title": "YAML",
+            "title:": "The front matter block must start and end with `---`",
+            "front_matter_title_2": "regex",
+            "front_matter_regex": "^---(\\n|.)+?---$"
+        },
+        "MD033":false,
+        "MD007": {
+            "indent": 4
+        },
+        "MD024":false
+    },
+    "editor.fontFamily": "Inter, Monaco, 'Courier New', monospace",
+    "workbench.colorTheme": "One Dark Pro Flat",
+    "editor.wordWrap": "wordWrapColumn",
+    "editor.wordWrapColumn": 80,
+    "editor.wordBasedSuggestions": false,
+    "[markdown]": {
+        "editor.wordWrap": "wordWrapColumn",
+        "editor.wordWrapColumn": 80
+    },
+    "editor.formatOnPaste": true,
+    "editor.minimap.enabled": false,
+    "files.autoSave": "afterDelay",
+    "workbench.tips.enabled": false,
+    "grammarly.files.include": [
+        "**/*.md"
+    ],
+    "editor.fontSize": 16,
+    "editor.tabSize": 2,
+    "files.associations": {
+        "*.latex": "latex",
+        "*.tex": "latex"
+    },
+    "pandoc.docxOptString": "",
+    "grammarly.files.exclude": [
+        "**/*.yaml"
+    ],
+    "editor.hover.delay": 2000
+}
