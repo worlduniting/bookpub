@@ -7,7 +7,7 @@
   "scripts": {
     "build": "node index.js",
     "start": "webpack serve --open",
-    "test": ""
+    "test": "jest"
   },
   "bin": {
     "create-book-project": "create-book-project.js",
@@ -57,5 +57,9 @@
     "webpack": "^5.76.3",
     "webpack-cli": "^5.0.1",
     "webpack-dev-server": "^4.13.1"
+  },
+  "devDependencies": {
+    "execa": "^7.1.1",
+    "jest": "^29.5.0"
   }
 }

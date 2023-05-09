@@ -1,2 +1,2 @@
-# Publishing With BookPub
+# Information for your
 

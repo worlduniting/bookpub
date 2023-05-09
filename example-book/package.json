@@ -1,11 +1,13 @@
 {
-  "name": "becoming-human",
+  "name": "Test Project Name",
   "version": "1.2.0",
-  "description": "A Mountaintop Experience",
+  "description": "Test book description",
   "main": "index.js",
   "type": "module",
-  "entry": "./bin/book.js",
   "scripts": {},
-  "author": "Rev. Dave Thompson",
-  "license": "WUI-LICENSE"
+  "author": "Test Author",
+  "license": "TEST-LICENSE",
+  "dependencies": {
+    "bookpub": "^0.2.0"
+  }
 }

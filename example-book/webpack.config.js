@@ -10,7 +10,6 @@ export default (env) => {
     // Check if 'env' is pdf, otherwise default to html
     const outputPath = outputType === 'pdf' ? 'build/pdf' : 'build/html';
     const entryName = path.join(__dirname, 'build', outputType, 'theme', 'js', 'index.js');
-    console.log(`Your Webpack entryName is ${entryName}`);
 
     return {
         mode: 'development',
@@ -53,5 +52,21 @@ export default (env) => {
                 fs: false,
             },
         },
+        plugins: [
+            // ... other plugins ...
+            new MessageTag({ message: `\n    ===|  To Quit Dev Mode use ctrl-c (twice to force). |===\n\n` }),
+        ],
     };
 };
+
+class MessageTag {
+    constructor(options) {
+        this.message = options.message || 'To Quit Dev Mode use ctrl-c (twice to force)';
+    }
+
+    apply(compiler) {
+        compiler.hooks.done.tap('MessageTag', (stats) => {
+            console.log('\n' + this.message);
+        });
+    }
+}

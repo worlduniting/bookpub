@@ -7,40 +7,29 @@ As a member project of the OpenJS Foundation, Electron uses [Contributor Covenan
 
 ## Contributor Covenant Code of Conduct
 
-### Our Pledge
-
-We as members, contributors, and leaders pledge to make participation in our
-community a harassment-free experience for everyone, regardless of age, body
-size, visible or invisible disability, ethnicity, sex characteristics, gender
-identity and expression, level of experience, education, socio-economic status,
-nationality, personal appearance, race, religion, or sexual identity
-and orientation.
-
-We pledge to act and interact in ways that contribute to an open, welcoming,
-diverse, inclusive, and healthy community.
-
 ### A CIVIL HUMAN Ethic
 
-As a community of human being, we ask that all people abide by the CIVIL HUMAN Ethic:
+As a community of human beings, we will abide by the CIVIL HUMAN Ethic:
 
-**H.U.M.A.N. Expectations**
+**H.U.M.A.N. Conduct**
 
-We will agree to conduct ourselves by meeting the following expectations by being:
-* (H)onest about what we have observed and what we cannot observe observe
-* (U)nderstandable and work to make sure all people can understand you
-* (M)easurable and provide measurable proof to support your claims
-* (A)chievable by only asking of others what they can achieve without suffering
-* (N)egotiable by changing your conduct and beliefs so that they remain HUMAN and CIVIL.
+We agree to conduct ourselves as ethical people by being:
+
+* (H)onest about what we have observed and what we cannot observe,
+* (U)nderstandable to make sure all people can understand us,
+* (M)easurable by providing measurable proof to support our claims,
+* (A)chievable by only asking of each other what we can achieve without suffering,
+* (N)egotiable by changing our conduct so that we remain HUMAN and CIVIL.
 
 **C.I.V.A.L. Respect**
 
-We will agree to respect these basic human rights, providing the freedom for all humans to respect each others':
+We agree to respect each others' basic human need to exercise our own:
 
-* (C)reed concerning those questions that we cannot yet answer or understand.
-* (I)ndependence concerning every humans need to live free from the control of others.
-* (V)ote concerning our equal choice for who will exercise control over us.
-* (I)ntimacy by permitting every human the freedom to intimately love a person of their own choosing.
-* (L)ife by protecting the basic right to live and to pursue a life that makes them happy.
+* (C)reed concerning those questions that we cannot yet answer or observe,
+* (I)ndependence from the control of others,
+* (V)ote for those who will have control over us,
+* (I)ntimacy with the person we choose to intimately love,
+* (L)ife and pursuit of happiness.
 
 ### Enforcement Responsibilities
 
