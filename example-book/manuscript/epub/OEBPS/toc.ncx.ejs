@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
 <ncx xmlns:calibre="http://calibre.kovidgoyal.net/2009/metadata" xmlns="http://www.daisy.org/z3986/2005/ncx/" version="2005-1" xml:lang="en">
   <head>
-    <meta name="dtb:uid" content="<%= @book.isbn %>"/>
+    <meta name="dtb:uid" content="<%= meta.isbn %>"/>
     <meta name="dtb:depth" content="1"/>
     <meta name="dtb:totalPageCount" content="0"/>
     <meta name="dtb:maxPageNumber" content="0"/>
   </head>
   <docTitle>
-    <text><%= @book.title %></text>
+    <text><%= meta.title %></text>
   </docTitle>
 
   <navMap>

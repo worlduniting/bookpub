@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" />
+<html>
+
+<head>
+  <title><%= meta.title %>: <%= meta.subtitle %></title>
+  <meta name="author" content="<%= meta.author %>" />
+  <link rel="stylesheet" type="text/css" href="theme/css/styles.<%= outputType %>.mock.css" />
+</head>
+
+<body>
+  <!-- A page for the well-deserved PrinceXML logo -->
+  <div class="blankpage"></div>
+
+  <div class="frontcover">
+
+    <img src="theme/images/cover.mock.jpg" />
+
+  </div>
+
+  <%- include('./frontmatter/1_title.md.mock.ejs'); %>
+  <%- include('./frontmatter/toc.md.mock.ejs'); %>
+  <%- include('./frontmatter/preface.md.mock.ejs'); %>
+  <%- include('./mainmatter/c1/c1-web-html.md.mock.ejs'); %>
+  <%- include('./mainmatter/c2/c2-css.md.mock.ejs'); %>
+  <%- include('./backmatter/1-index.md.mock.ejs'); %>
+
+  <!-- For Webpack "Dev Mode" reloading -->
+  <script src="bundle.js"></script>
+</body>
+
+</html>

@@ -7,7 +7,7 @@
   "scripts": {
     "build": "node index.js",
     "start": "webpack serve --open",
-    "test": "jest"
+    "test": "mocha --require esm --extension js --recursive test"
   },
   "bin": {
     "create-book-project": "create-book-project.js",
@@ -59,7 +59,9 @@
     "webpack-dev-server": "^4.13.1"
   },
   "devDependencies": {
+    "chai": "^4.3.7",
+    "esm": "^3.2.25",
     "execa": "^7.1.1",
-    "jest": "^29.5.0"
+    "mocha": "^10.2.0"
   }
 }

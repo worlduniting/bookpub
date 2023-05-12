@@ -15,16 +15,18 @@
             "front_matter_title_2": "regex",
             "front_matter_regex": "^---(\\n|.)+?---$"
         },
-        "MD033":false,
+        "MD033": false,
         "MD007": {
             "indent": 4
         },
-        "MD024":false
+        "MD024": false
     },
     "editor.hover.delay": 1500,
     "editor.fontFamily": "Inter, Monaco, 'Courier New', monospace",
     "editor.fontSize": 14,
     "editor.fontWeight": "500",
     "editor.wordWrap": "bounded",
-    "workbench.colorTheme": "One Dark Pro Flat"
+    "workbench.colorTheme": "One Dark Pro Flat",
+    "mochaExplorer.files": "test/**/*.js",
+    "mochaExplorer.ui": "bdd"
 }

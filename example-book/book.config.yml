@@ -16,6 +16,8 @@ meta:
   date: 2023-05-01
   language: en
   lccn: 0123456789
+  subject: Non-fiction
+  rights: All Rights Reserved
 
 # -------------------
 # BookPub Settings
@@ -29,7 +31,7 @@ settings:
 # Embedded Javascript Syntax
 #   https://ejs.co/
 # ___________________________
-ejs-lint-options:
+ejs-options:
   # Allow usage of await inside template [true/false]
   await: true
   # Allow old (pre-EJS v3) preprocessor-style includes [true/false]

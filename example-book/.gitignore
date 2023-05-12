@@ -3,3 +3,6 @@ node_modules
 
 # Don't include build files
 build
+
+# Don't include test builds
+test/build
