@@ -7,7 +7,8 @@
   "scripts": {
     "build": "node index.js",
     "start": "webpack serve --open",
-    "test": "mocha --require esm --extension js --recursive test"
+    "test": "mocha --require esm --extension js --recursive test",
+    "test:clean": "rimraf build/* test/build/* test/archives/*"
   },
   "bin": {
     "create-book-project": "create-book-project.js",
@@ -46,6 +47,7 @@
     "inquirer": "^9.1.5",
     "install": "^0.13.0",
     "js-yaml": "^4.1.0",
+    "moment": "^2.29.4",
     "nodemon": "^2.0.22",
     "npm": "^9.6.2",
     "remark-gfm": "^3.0.1",
@@ -53,6 +55,7 @@
     "remark-parse": "^10.0.1",
     "sass": "^1.60.0",
     "smartypants": "^0.1.6",
+    "tar": "^6.1.14",
     "unified": "^10.1.2",
     "webpack": "^5.76.3",
     "webpack-cli": "^5.0.1",

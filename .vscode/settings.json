@@ -28,5 +28,8 @@
     "editor.wordWrap": "bounded",
     "workbench.colorTheme": "One Dark Pro Flat",
     "mochaExplorer.files": "test/**/*.js",
-    "mochaExplorer.ui": "bdd"
+    "mochaExplorer.ui": "bdd",
+    "code-runner.executorMap": {
+        "html": "open -a 'Google Chrome' $fullFileName"
+    }
 }
