@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.3.0] - 2023-5-14
+
+### Added
+
+* New Testing Framework!
+    * Added Mocha and Chai for BDD/TDD testing
+    * Created Mock Book/Manuscript
+        * Mock book.config.mock.yml
+        * Mock manuscript using most major EJS funcitonality
+    * Added Archive function to be able to view test builds
+        * Creates an archive of builds for each test in the `archives/` folder
+    * Created test:clean npm task for removing archives/builds
+
 ## [0.2.0] - 2023-5-9
 
 ### Added
