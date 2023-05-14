@@ -8,7 +8,6 @@ import { Command } from 'commander';
 import convert from './lib/convert.js';
 import path from 'path';
 import nodemon from 'nodemon';
-import { readFileSync, existsSync } from 'fs';
 import { spawn } from 'child_process';
 import chalk from 'chalk';
 import createNewBookProject from './lib/create-new-book.js'
@@ -17,10 +16,13 @@ import lintEjs from './lib/lint-ejs.js'
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const packageJson = JSON.parse(fs.readFileSync(path.join(__dirname, 'package.json'), 'utf-8'));
+const packageJson = process.env.TEST_PACKAGE_JSON || JSON.parse(fs.readFileSync(path.join(__dirname, 'package.json'), 'utf-8'));
 
-const manuscriptDir = path.join(process.cwd(), 'manuscript');
+const manuscriptDir = process.env.TEST_MANUSCRIPT || path.join(process.cwd(), 'manuscript');
 const manRel = path.relative(process.cwd(), manuscriptDir);
+
+// Load the book.config.yml into the book object
+const book = await loadBookConfig();
 
 const program = new Command();
 program.version(packageJson.version);
@@ -32,9 +34,9 @@ program
     .action(async (options) => {
         console.log(`\nBuilding ${options.type.toUpperCase()} Format...\n`);
         if (options.type === 'html') {
-            await buildHtml(manuscriptDir, path.join(process.cwd(), 'build', 'html'), options.type);
+            await buildHtml(book, manuscriptDir, path.join(process.cwd(), 'build', 'html'), options.type);
         } else if (options.type === 'pdf') {
-            await buildPdf(manuscriptDir, path.join(process.cwd(), 'build', 'pdf'), options.type);
+            await buildPdf(book, manuscriptDir, path.join(process.cwd(), 'build', 'pdf'), options.type);
         } else {
             console.error('Invalid output type specified. Use either "html" or "pdf".');
         }
@@ -75,41 +77,42 @@ program
     });
 
 program
-    .command('lint')
-    .description('Lint EJS files i  n the manuscript folder')
-    .action(async () => {
-        console.log(manuscriptDir)
-        const ejsLintOpt = await loadEjsLintOptions();
-        console.log(chalk.greenBright(`\nLinting EJS files in the manuscript folder: ${manRel}\n`));
+    .command('lint [fileName]')
+    .description('Lint EJS files in the manuscript folder.\n     \'bookpub lint\' - If no file name is specified, all EJS files will be linted.\n     \'bookpub lint [filename]\' - If a file name is specified, only that file will be linted.')
+    .action(async (fileName) => {
 
         try {
-            await lintEjs(manRel, ejsLintOpt);
-            console.log(chalk.greenBright('All EJS files passed linting.'));
+            if (fileName) {
+                // Lint a specific file
+                console.log(chalk.greenBright(`\n     Linting EJS file: ${fileName}\n`));
+                await lintEjs(path.join(manuscriptDir, fileName));
+            } else {
+                // Lint all EJS files
+                console.log(chalk.greenBright(`\n     Linting EJS files in the ${chalk.yellowBright(manRel)} folder.\n`));
+                await lintEjs(manuscriptDir);
+            }
+            console.log(chalk.greenBright('     Excellent!! All EJS files passed linting!\n\n'));
         } catch (error) {
-            console.error(chalk.redBright(`Error: ${error.message}`));
+            console.error(chalk.redBright(`     Looks like we ${error.message}`));
         }
     });
 
-async function loadEjsLintOptions() {
-    const bookConfigPath = path.resolve('./book.config.yml');
-
-    if (await fs.pathExists(bookConfigPath)) {
-        const bookConfigContent = await fs.readFile(bookConfigPath, 'utf8');
-        const bookConfig = yaml.load(bookConfigContent);
-
-        return bookConfig.settings?.ejsLintOpt;
+async function loadBookConfig() {
+    try {
+        const book = yaml.load(fs.readFileSync(path.join(process.cwd(), 'book.config.yml'), 'utf-8'));
+        return book;
+    } catch (error) {
+        console.error(chalk.redBright(`Error: ${error.message}`));
     }
-
-    return null;
 }
 
 
 
-async function buildHtml(manuscriptDir, outputDir, outputType) {
+async function buildHtml(book, manuscriptDir, outputDir, outputType) {
     const outRel = path.relative(process.cwd(), outputDir);
     console.log(`    Manuscript Location: ${chalk.yellowBright(`/${manRel}/`)}\n      Build Output Location: ${chalk.yellowBright(`/${outRel}/`)}\n\n`)
     try {
-        await convert(manuscriptDir, outputDir, outputType);
+        await convert(book, manuscriptDir, outputDir, outputType);
     } catch (error) {
         const ui = cliui({ wrap: false });
         ui.div(
@@ -123,8 +126,8 @@ async function buildHtml(manuscriptDir, outputDir, outputType) {
     }
 }
 
-async function buildPdf(manuscriptDir, outputDir, outputType) {
-    await buildHtml(manuscriptDir, outputDir, outputType);
+async function buildPdf(book, manuscriptDir, outputDir, outputType) {
+    await buildHtml(book, manuscriptDir, outputDir, outputType);
 
     try {
         const pdfOutDirRel = path.relative(process.cwd(), outputDir);
@@ -172,14 +175,6 @@ async function runWebpackDevServerAsync(outputType) {
     });
 
     return server;
-}
-
-// Helper function to validate the user's nodemon.json file
-function validateUserNodemonConfig(config) {
-    if (!config || !config.execMap || !config.execMap.html) {
-        return false;
-    }
-    return true;
 }
 
 async function runNodemon(outputType) {

@@ -15,37 +15,18 @@
             "front_matter_title_2": "regex",
             "front_matter_regex": "^---(\\n|.)+?---$"
         },
-        "MD033":false,
+        "MD033": false,
         "MD007": {
             "indent": 4
         },
-        "MD024":false
+        "MD024": false
     },
+    "editor.hover.delay": 1500,
     "editor.fontFamily": "Inter, Monaco, 'Courier New', monospace",
+    "editor.fontSize": 14,
+    "editor.fontWeight": "500",
+    "editor.wordWrap": "bounded",
     "workbench.colorTheme": "One Dark Pro Flat",
-    "editor.wordWrap": "wordWrapColumn",
-    "editor.wordWrapColumn": 80,
-    "editor.wordBasedSuggestions": false,
-    "[markdown]": {
-        "editor.wordWrap": "wordWrapColumn",
-        "editor.wordWrapColumn": 80
-    },
-    "editor.formatOnPaste": true,
-    "editor.minimap.enabled": false,
-    "files.autoSave": "afterDelay",
-    "workbench.tips.enabled": false,
-    "grammarly.files.include": [
-        "**/*.md"
-    ],
-    "editor.fontSize": 16,
-    "editor.tabSize": 2,
-    "files.associations": {
-        "*.latex": "latex",
-        "*.tex": "latex"
-    },
-    "pandoc.docxOptString": "",
-    "grammarly.files.exclude": [
-        "**/*.yaml"
-    ],
-    "editor.hover.delay": 2000
+    "mochaExplorer.files": "test/**/*.js",
+    "mochaExplorer.ui": "bdd"
 }

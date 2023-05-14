@@ -7,17 +7,17 @@
 meta:
   # add any additional data your want
   #   e.g. - pagecount: 221 (access with <%= meta.pagecount %>)
-  title: Publishing With BookPub
-  subtitle: A real world guide to book publishing
-  author: Rev Dave Thompson
+  title: Title Test
+  subtitle: Subtitle Test
+  author: Dr. Author Test
   isbn-13: 0123456789101
   isbn-10: 0123456789
   publisher: World Uniting Press
   date: 2023-05-01
   language: en
   lccn: 0123456789
-  subject: Non-fiction
-  rights: All Rights Reserved
+  subject: Test-subject
+  rights: All Test Rights Reserved
 
 # -------------------
 # BookPub Settings
@@ -25,7 +25,7 @@ meta:
 settings:
   # This is the entry point for the manuscript source
   # Can also include an array of files [file1, file2, etc.]
-  entryfile: index.md.ejs
+  entryfile: index.md.mock.ejs
 
 # ---------------------------
 # Embedded Javascript Syntax

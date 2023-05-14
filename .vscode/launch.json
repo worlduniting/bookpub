@@ -4,21 +4,23 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Debug CLI",
+            "name": "Mocha Tests",
+            "program": "${workspaceFolder}/node_modules/mocha/bin/_mocha",
+            "args": [
+                "--require",
+                "esm",
+                "--extension",
+                "js",
+                "--recursive",
+                "test"
+            ],
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "internalConsoleOptions": "neverOpen",
+            "disableOptimisticBPs": true,
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}/cli.js",
-            "args": [
-                "build",
-                "-t",
-                "html"
-            ],
-            "cwd": "${workspaceFolder}",
-            "runtimeArgs": [
-                "--experimental-specifier-resolution=node"
-            ],
-            "nodeVersionHint": 14
         }
     ]
 }
