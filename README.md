@@ -1,14 +1,12 @@
-# BookPub - book publishing, web tools
+# BookPub - book publishing using web-driven tools.
 
-<!--- Logo picture element for user's light/dark modes --->
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./assets/bookpub-logo_white.png">
-  <img style="text-align: center" alt="BookPub logo header" src="./assets/bookpub-logo.svg">
-</picture>
+<p align="center">
+  <img src="assets/bookpub-logo.svg" width="70%" height="70%" alt="BookPub logo header"/>
+</p>
 
-**BookPub** is an advanced book publishing framework for a web-driven world. 
+**BookPub** is an advanced book publishing framework based on Markdown, HTML, CSS and Javascript.
 
-BookPub manages a manuscript-to-market toolchain, allowing publishing firms, authors and other stakeholders to manage one markdown-based manuscript source, which can be professionally designed and typeset (even for print) using HTML, CSS and Javascript Web Standards. Bookpub can then build your source into any format (PDF, EPUB, MOBI, HTML).
+BookPub manages a manuscript-to-market toolchain, allowing publishing firms, authors and other stakeholders to manage one markdown-based manuscript source, which can be professionally designed and typeset (even for print) using HTML, CSS and Javascript Web Standards. Bookpub will build your manuscript into any format (PDF, EPUB, MOBI, HTML).
 
 ## Features
 
@@ -79,7 +77,7 @@ BookPub manages a manuscript-to-market toolchain, allowing publishing firms, aut
 
     `bookpub new my-book` (where `my-book` is the name of your project)
 
-    This will walk you through the creation of your new book project. You will be asked a series of questions and will generate our default book example, using your answers. 
+    This will walk you through the creation of your new book project. You will be asked a series of questions and will generate our default book example, using your answers.
 
 The project will have the following structure:
 

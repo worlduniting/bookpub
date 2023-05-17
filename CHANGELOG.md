@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.3.1] - 2023-5-16
+
+### Added
+
+* BookPub will check for a local installation in node-modules and use that, otherwise it will look for a global install
+    * This will permit users to keep the correct version of BookPub that corresponds to their manuscript (should there be changes in the future)
+* Created separate NPM Package **create-bookpub-project**
+    * Stored in same repository, under `packages/create-bookpub-project/`
+    * Users will now run `npx create-bookpub-project`
+
 ## [0.3.0] - 2023-5-14
 
 ### Added

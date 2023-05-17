@@ -14,15 +14,22 @@ import createNewBookProject from './lib/create-new-book.js'
 import yaml from 'js-yaml';
 import lintEjs from './lib/lint-ejs.js'
 
+// Grab all the arguments after "node bookpub.js"
+const args = process.argv.slice(2).join(' ');
+
+
+// Define a variable to store the path of bookpub to use
+let bookpubPath;
+
+// Check for local bookpub before running other cli.js functions
+checkLocalBookpub();
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const packageJson = process.env.TEST_PACKAGE_JSON || JSON.parse(fs.readFileSync(path.join(__dirname, 'package.json'), 'utf-8'));
 
 const manuscriptDir = process.env.TEST_MANUSCRIPT || path.join(process.cwd(), 'manuscript');
 const manRel = path.relative(process.cwd(), manuscriptDir);
-
-// Load the book.config.yml into the book object
-const book = await loadBookConfig();
 
 const program = new Command();
 program.version(packageJson.version);
@@ -32,7 +39,9 @@ program
     .option('-t, --type <type>', 'Specify the output type (html or pdf)', 'html')
     .description('Build the output from the manuscript markdown files')
     .action(async (options) => {
-        console.log(`\nBuilding ${options.type.toUpperCase()} Format...\n`);
+        // Load the book.config.yml into the book object
+        const book = await loadBookConfig();
+        console.log(chalk.cyanBright(`\nBuilding ${options.type.toUpperCase()} Format...\n`));
         if (options.type === 'html') {
             await buildHtml(book, manuscriptDir, path.join(process.cwd(), 'build', 'html'), options.type);
         } else if (options.type === 'pdf') {
@@ -40,11 +49,11 @@ program
         } else {
             console.error('Invalid output type specified. Use either "html" or "pdf".');
         }
-        console.log(chalk.greenBright(`
-    ---------------------------
-        Yay! Your ${chalk.greenBright(options.type.toUpperCase())} Book Was Built!!
-    ---------------------------
-        `));
+        console.log(chalk.white(`
+    ---------------------------------------
+        ${chalk.greenBright(`Yay! Your ${chalk.yellowBright(options.type.toUpperCase())} Book Was Built!!`)}
+    ---------------------------------------
+        \n`));
     });
 
 program
@@ -97,6 +106,22 @@ program
         }
     });
 
+// If local bookpub available, use it. Otherwise, use global
+function checkLocalBookpub() {
+    // Check if there's a local version of bookpub
+    var localBookpubPath = path.join(process.cwd(), 'node_modules', 'bookpub', 'cli.js');
+    if (fs.existsSync(localBookpubPath)) {
+        // If there's a local version, use it
+        console.log('(Using local BookPub)');
+        bookpubPath = `node ${localBookpubPath}`;
+    } else {
+        // Otherwise, use the global version
+        console.log('Using global bookpub');
+        bookpubPath = `bookpub`;
+    }
+}
+
+
 async function loadBookConfig() {
     try {
         const book = yaml.load(fs.readFileSync(path.join(process.cwd(), 'book.config.yml'), 'utf-8'));
@@ -106,11 +131,9 @@ async function loadBookConfig() {
     }
 }
 
-
-
-async function buildHtml(book, manuscriptDir, outputDir, outputType) {
+async function buildHtml(book, manuscriptDir, outputType, outputDir) {
     const outRel = path.relative(process.cwd(), outputDir);
-    console.log(`    Manuscript Location: ${chalk.yellowBright(`/${manRel}/`)}\n      Build Output Location: ${chalk.yellowBright(`/${outRel}/`)}\n\n`)
+    console.log(`    Manuscript Location: ${chalk.yellowBright(`/${manRel}/`)}\n    Build Output Location: ${chalk.yellowBright(`/${outRel}/`)}\n\n`)
     try {
         await convert(book, manuscriptDir, outputDir, outputType);
     } catch (error) {
@@ -132,7 +155,7 @@ async function buildPdf(book, manuscriptDir, outputDir, outputType) {
     try {
         const pdfOutDirRel = path.relative(process.cwd(), outputDir);
         // Run the prince command-line tool
-        console.log(`  10. Building your Print PDF to ${chalk.yellowBright(`/${pdfOutDirRel}/index.pdf`)}\n `);
+        console.log(`  * Building your Print PDF to ${chalk.yellowBright(`/${pdfOutDirRel}/index.pdf`)}\n `);
         const prince = spawn('prince', ['build/pdf/index.html'], { stdio: 'inherit' });
         prince.on('error', (error) => {
             console.error(`Error: ${error.message}`);
@@ -178,7 +201,7 @@ async function runWebpackDevServerAsync(outputType) {
 }
 
 async function runNodemon(outputType) {
-    const env = { outputType };
+    const env = { outputType, bookpubPath };
     const userNodemonConfig = await getNodemonConfig(env);
     let nodemonConfig = {};
 
@@ -189,7 +212,7 @@ async function runNodemon(outputType) {
         nodemonConfig = {
             script: __filename,
             ext: outputType === 'pdf' ? 'md,mdx,js,ejs,json,html,css,scss,yaml' : 'md,mdx,js,ejs,json,html,css,scss,yaml',
-            exec: `bookpub build --type ${outputType}`,
+            exec: `${bookpubPath} build --type ${outputType}`,
             watch: 'manuscript',
         };
     }
