@@ -61,6 +61,12 @@ export default async function createBookPubProject(projectName) {
         // Get user input
         const answers = await inquirer.prompt(questions);
 
+        // Check if the user already has a directory called projectName
+        if (fs.existsSync(projectName)) {
+            console.log(chalk.magentaBright(`\nA directory called '${chalk.whiteBright(projectName)}' already exists.\n`));
+            process.exit(1);
+        }
+
         // Create the project directory
         const projectPath = path.resolve(process.cwd(), answers.projectName);
         await fs.ensureDir(projectPath);

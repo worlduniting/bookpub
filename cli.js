@@ -36,8 +36,8 @@ program.version(packageJson.version);
 
 program
     .command('build')
-    .option('-t, --type <type>', 'Specify the output type (html or pdf)', 'html')
-    .description('Build the output from the manuscript markdown files')
+    .option('-t, --type <type>', 'specify the output type (html or pdf)', 'html')
+    .description('build the output from the manuscript markdown files')
     .action(async (options) => {
         // Load the book.config.yml into the book object
         const book = await loadBookConfig();
@@ -58,8 +58,8 @@ program
 
 program
     .command('dev')
-    .option('-t, --type <type>', 'Specify the output type (html or pdf)', 'html')
-    .description('Run the development server with live-reloading')
+    .option('-t, --type <type>', 'specify the output type (html or pdf)', 'html')
+    .description('run the development server with live-reloading')
     .action(async (options) => {
         console.log(`\nRunning Nodemon and Webpack Server for ${options.type.toUpperCase()}...\n`);
         if (options.type === 'html') {
@@ -76,7 +76,7 @@ program
 
 program
     .command('new <projectName>')
-    .description('Create a new book project')
+    .description('create a new book project')
     .action(async (projectName) => {
         console.log(chalk.greenBright(`\nLet\'s create your new book project: ${chalk.yellowBright(projectName)}\n`));
 
@@ -87,7 +87,7 @@ program
 
 program
     .command('lint [fileName]')
-    .description('Lint EJS files in the manuscript folder.\n     \'bookpub lint\' - If no file name is specified, all EJS files will be linted.\n     \'bookpub lint [filename]\' - If a file name is specified, only that file will be linted.')
+    .description('lint EJS files in the manuscript folder.\n  \'bookpub lint\'         If no file name is specified, all EJS files will be linted.\n  \'bookpub lint [file]\'  If a file name is specified, only that file will be linted.\n')
     .action(async (fileName) => {
 
         try {
@@ -163,18 +163,8 @@ async function buildPdf(book, manuscriptDir, outputDir, outputType) {
 
         return prince;
     } catch (error) {
-        console.error(chalk.redBright('  Bummer. We couldn\'t build your pdf, because:'), chalk.redBright(error + '\n'));
+        console.error(chalk.redBright('  Bummer. We couldn\'t build your pdf, because:'), chalk.magentaBright(error + '\nPlease make sure you have prince installed and available in your PATH.\n Visit https://www.princexml.com/doc/installing/ for more information.\n'));
     }
-}
-
-// Setup nodemon function to return as a Promise
-function runNodemonAsync(outputType) {
-    return new Promise(async (resolve, reject) => {
-        await runNodemon(outputType);
-        nodemon
-            .on('quit', resolve)
-            .on('error', reject);
-    });
 }
 
 // Run the webpack server using default settings
@@ -198,6 +188,16 @@ async function runWebpackDevServerAsync(outputType) {
     });
 
     return server;
+}
+
+// Setup nodemon function to return as a Promise
+function runNodemonAsync(outputType) {
+    return new Promise(async (resolve, reject) => {
+        await runNodemon(outputType);
+        nodemon
+            .on('quit', resolve)
+            .on('error', reject);
+    });
 }
 
 async function runNodemon(outputType) {
