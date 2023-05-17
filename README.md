@@ -55,31 +55,39 @@ BookPub manages a manuscript-to-market toolchain, allowing publishing firms, aut
 
       `curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash`
 
-### Installing **BookPub**
+* [PrinceXML](https://princexml.com) - You will need to install PrinceXML to build PDFs
 
-  * From the command line:
-
-    `npm install -g bookpub`
-
-    It is important to use the `-g` (global) flag when installing BookPub. This will install BookPub system-wide. BookPub is a (CLI) "command-line interface", so you will need to be able to execute `bookpub` from anywhere on your command-line (terminal).
-
-### Install PrinceXML (to build PDFs)
+  We've chosen the PrinceXML library because it is the best available for converting HTML/CSS/Javascript to Print-Ready PDFs. (At some point we may add other options.)
 
   * [Installation and Setup Instructions Here](https://www.princexml.com/doc/installing/)
 
+### Creating a New **BookPub** Project
+
+  * From the command line, type:
+
+    `npx create-bookpub-project`
+
+    <small>*If this is your first time, please select (y) when prompted.*</small>
+
+    This will install BookPub (globally) on your system. You will then be asked a series of questions to help setup your new project.
+
+    This is an example book to demonstrate how to use HTML/CSS/Javascript to publish a book. It's built off of the example [Boom! microformat here](https://alistapart.com/article/boom/). The answers to your `npx create-bookpub-project` will be used to fill in the title, author, etc.
+
+  * Test Drive - You can test drive your new project by changing into your new project `cd [your-project]` and creating a basic HTML format of your example book:
+
+      `bookpub build -t html`
+
+      This will build the HTML format of your new book.
+
 ## Usage
 
-**BookPub** is essentially an HTML/CSS/Javascript based book framework. All the different book formats are built off of this foundation. That said, we've attempted to help streamline the process by integrating common industry tools best-practices.
+We created **BookPub** in an effort to share an example of best-practices (or at least our opinion) for managing a manuscript-to-print pipeline. Rather than forcing people to follow rigid rules, we've attempted to provide a maximum of flexibility, while showing our example of the converntions that we use.
 
-### 1. Creating Your New Book Project
+**BookPub** is essentially an HTML/CSS/Javascript based book framework. All the different book formats are built off of this foundation. That said, we've attempted to help streamline the process by integrating common industry tools and best-practices.
 
-  * **Create your new BookPub project** - from the command-line (terminal), typeyour:
+### 1. Getting Started
 
-    `bookpub new my-book` (where `my-book` is the name of your project)
-
-    This will walk you through the creation of your new book project. You will be asked a series of questions and will generate our default book example, using your answers.
-
-The project will have the following structure:
+Your new book project will have the following structure:
 
 ```plain
 my-book
@@ -107,7 +115,7 @@ my-book
 
 ### 2. Managing Your Book's Meta Data (book.config.yml)
 
-The `book.config.yml` is a [YAML File](https://www.cloudbees.com/blog/yaml-tutorial-everything-you-need-get-started) used to store your book's meta-data and configuration settings. You can use this file to store details about the book, like the title, isbn, author, lccn, etc. 
+The `book.config.yml` is a [YAML File](https://www.cloudbees.com/blog/yaml-tutorial-everything-you-need-get-started) used to store your book's meta-data and configuration settings. You can use this file to store details about the book, like the title, isbn, author, lccn, etc.
 
 All the data in `book.config.yml` is made available for you to use in the manuscript source.
 
@@ -141,36 +149,44 @@ The title of my book is My Book Title.
 
 ### 3. Working With Your Manuscript
 
-We have tried to give users as much flexibility as possible. That said, there are a few things to keep in mind:
+--> **One Manuscript To Rule Them All** <--
+
+**BookPub's** philosophy stems from the DRY (Don't Repeat Yourself) principle. As such, we want to always/only have one manuscript from which all the formats are built.
+
+You can arrange your manuscript in any way you like: One giant document, or a complicated breakout of different files and sections. We have tried to give users as much flexibility as possible.
+
+That said, there are a few things to keep in mind:
+
+--> **THREE SIMPLE RULES** <--
 
 1. All source code for your manuscript must be stored in the `manuscript/` folder.
 
 2. All files must end with .ejs (except for files in the theme folder)
 
-  * For a tutorial on using EJS, visit [the EJS Site](https://ejs.co/)
-
     * Our convention for naming files has been `[name].[filetype].ejs`.
+      * e.g. So, if we had an html file, it would be named `myname.html.ejs`
+    * For a tutorial on using EJS, visit [the EJS Site](https://ejs.co/)
 
-      * If we have an html file that we want to add, it will be named `myname.html.ejs`
+3. The entryfile (the beginning of your manuscript) must be specified in your book.config.yml (entryfile).
 
-      * The only part of the name that is necessary is the `.ejs` extension. For the sake of clarity, we recommend describing the file-type in the middle.
+    * We recommend keeping the first file as `index.md.ejs`
 
-3. The entryfile (the beginning of your manuscript) must be in your `manuscript/` folder.
+    * You can choose another name or location. But it must be specified in your `book.config.yml`
 
-  * We recommend keeping the first file as `index.md.ejs`
+      For example, if you want your entryfile to be `myentryfile.md.ejs`, record it in your book.config.yml as:
 
-  * You can choose another name or location. But it must be specified in your `book.config.yml`
+      ```yml
+      # book.config.yml
 
-    For example, if you want your entryfile to be `myentryfile.md.ejs`, record it in your book.config.yml as:
+      # Let's set our entryfile
+      settings:
+        entryfile: myentryfile.md.ejs
 
-    ```yml
-    # book.config.yml
+      ```
+4. Ok, so maybe we lied...another small rule/recommendation concerning your `theme` folder.
 
-    # Let's set our entryfile
-    settings:
-      entryfile: myentryfile.md.ejs
-
-    ```
+    * Keep in mind, during the build process, your `theme` folder will be copied over as-is.
+    * If you want to use SASS (.scss) to handle your css, you will need to keep the css as it is when your new book project is built. We will be changing this later, but for now, it's a requirement for SASS.
 
 ### 4. Building Your Book
 
@@ -188,27 +204,27 @@ The basic command for building a specific format (type) of your book is the foll
 
 2. The Print-PDF version of your book
 
-    (Remember, you need to install PrincXML to create a PDF format.)
-
   * To build a pdf typeset version of your book for print, type this command in your project's root directory:
 
     `bookpub build -t pdf`
 
     This will build your manuscript into a print-ready PDF version of your book in the `build/pdf/` folder.
 
-### 5. "Dev Mode" - A Development Workflow
+### 5. A Development Workflow
+
+--> **DEV MODE** <--
 
 We built the **BookPub** framework to make writing, designing, typesetting and formatting your book as streamlined and instantaneous as possible.
 
-With "Dev Mode", you can work in REAL TIME. Changes in your manuscript are rebuilt and reloaded in your browser in real time.
+With **DEV MODE**, you can work in REAL TIME. Changes in your manuscript are rebuilt and reloaded in your browser in real time.
 
-"Dev Mode" will launch a browser window that will display the newly built version of your book, which will be updated as changes are made to your manuscript.
+**DEV MODE** will launch a browser window that will display the newly built version of your book, which will be updated as changes are made to your manuscript.
 
 #### HTML "DEV" Mode
 
 To work on the HTML version of your book in "dev" mode, type:
 
-    `bookpub dev -t html`
+   `bookpub dev -t html`
 
 Now, as you edit your manuscript, the final HTML build will automatically be reloaded into your browser with the new updates.
 
@@ -216,11 +232,11 @@ Now, as you edit your manuscript, the final HTML build will automatically be rel
 >
 > 1. We are using Nodemon to watch for changes in your manuscript directory and build a new copy upon any change.
 >
->   * We have included your own nodemon.js file if you would like to make changes (but tread carefully)
+>     * We have included your own nodemon.js file if you would like to make changes (tread carefully)
 >
 > 2. We are using Webpack to serve any new builds to your browser and refresh when a new build is created.
 >
->   * We have included your own webpack.config.ejs if you would like to make changes (but tread carefully)
+>     * We have included your own webpack.config.ejs if you would like to make changes (tread carefully)
 
 #### PDF "DEV" MODE
 

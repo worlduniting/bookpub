@@ -43,7 +43,8 @@ export default async function createBookPubProject(projectName) {
         {
             type: 'input',
             name: 'gitRepository',
-            message: `Do you have a git repository? (e.g. https://github.com/username/${projectName}`,
+            message: `Do you have a git repository? (Leave empty if not)`,
+            default: `https://github.com/username/${projectName}`
         },
         {
             type: 'input',
@@ -54,12 +55,19 @@ export default async function createBookPubProject(projectName) {
             type: 'input',
             name: 'randomQuestion',
             message: "What is the airspeed velocity of an unladen swallow?",
+            default: 'African or European?',
         },
     ];
 
     try {
         // Get user input
         const answers = await inquirer.prompt(questions);
+
+        // Check if the user already has a directory called projectName
+        if (fs.existsSync(projectName)) {
+            console.log(chalk.magentaBright(`\nA directory called '${chalk.whiteBright(projectName)}' already exists.\n`));
+            process.exit(1);
+        }
 
         // Create the project directory
         const projectPath = path.resolve(process.cwd(), answers.projectName);

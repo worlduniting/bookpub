@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.3.3] - 2023-5-17
+
+### Added
+
+* New README.md for create-bookpub-project package
+    * Copied over the console help message
+    * Copied over the output when a new project is generated.
+
+### Changed
+
+* Updated README.md
+    * Now reflects new installation procedure with `npx create-bookpub-project
+    * Cleaned up some content so it is clearer and in some cases correct. ;-)
+
 ## [0.3.1] - 2023-5-16
 
 ### Added
