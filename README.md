@@ -83,7 +83,7 @@ BookPub manages a manuscript-to-market toolchain, allowing publishing firms, aut
 
 We created **BookPub** in an effort to share an example of best-practices (or at least our opinion) for managing a manuscript-to-print pipeline. Rather than forcing people to follow rigid rules, we've attempted to provide a maximum of flexibility, while showing our example of the converntions that we use.
 
-**BookPub** is essentially an HTML/CSS/Javascript based book framework. All the different book formats are built off of this foundation. That said, we've attempted to help streamline the process by integrating common industry tools best-practices.
+**BookPub** is essentially an HTML/CSS/Javascript based book framework. All the different book formats are built off of this foundation. That said, we've attempted to help streamline the process by integrating common industry tools and best-practices.
 
 ### 1. Getting Started
 
