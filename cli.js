@@ -152,20 +152,23 @@ async function buildHtml(book, manuscriptDir, outputType, outputDir) {
 async function buildPdf(book, manuscriptDir, outputDir, outputType) {
     await buildHtml(book, manuscriptDir, outputDir, outputType);
 
+    const pdfOutDirRel = path.relative(process.cwd(), outputDir);
+    // Run the prince command-line tool
+    console.log(`  * Building your Print PDF to ${chalk.yellowBright(`/${pdfOutDirRel}/index.pdf`)}\n `);
+
     try {
-        const pdfOutDirRel = path.relative(process.cwd(), outputDir);
-        // Run the prince command-line tool
-        console.log(`  * Building your Print PDF to ${chalk.yellowBright(`/${pdfOutDirRel}/index.pdf`)}\n `);
         const prince = spawn('prince', ['build/pdf/index.html'], { stdio: 'inherit' });
+
         prince.on('error', (error) => {
-            console.error(`Error: ${error.message}`);
+            console.error(chalk.redBright('  Bummer. We couldn\'t build your pdf, because:'), chalk.magentaBright(error + '\nPlease make sure you have prince installed and available in your PATH.\n Visit https://www.princexml.com/doc/installing/ for more information.\n'));
         });
 
         return prince;
     } catch (error) {
-        console.error(chalk.redBright('  Bummer. We couldn\'t build your pdf, because:'), chalk.magentaBright(error + '\nPlease make sure you have prince installed and available in your PATH.\n Visit https://www.princexml.com/doc/installing/ for more information.\n'));
+        console.error(`Error: ${error.message}`);
     }
 }
+
 
 // Run the webpack server using default settings
 async function runWebpackDevServerAsync(outputType) {
