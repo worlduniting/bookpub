@@ -4,7 +4,7 @@
   <img src="assets/bookpub-logo.svg" width="70%" height="70%" alt="BookPub logo header"/>
 </p>
 
-**BookPub** is an advanced book publishing framework based on Markdown, HTML, CSS and Javascript.
+**BookPub** is an advanced book publishing framework for creating manuscripts in Markdown/HTML/CSS/Javascript, and publishing them into any format (PDF, ePub, MOBI, HTML, Print).
 
 BookPub manages a manuscript-to-market toolchain, allowing publishing firms, authors and other stakeholders to manage one markdown-based manuscript source, which can be professionally designed and typeset (even for print) using HTML, CSS and Javascript Web Standards. Bookpub will build your manuscript into any format (PDF, EPUB, MOBI, HTML).
 
