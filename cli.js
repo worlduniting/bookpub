@@ -10,7 +10,6 @@ import path from 'path';
 import nodemon from 'nodemon';
 import { spawn } from 'child_process';
 import chalk from 'chalk';
-import createNewBookProject from './lib/create-new-book.js'
 import yaml from 'js-yaml';
 import lintEjs from './lib/lint-ejs.js'
 
