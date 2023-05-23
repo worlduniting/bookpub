@@ -1,5 +1,3 @@
-# Don't include node_modules
 node_modules
-
-# Don't include build files
-build
+packages/create-bookpub-project/node_modules
+.DS_Store

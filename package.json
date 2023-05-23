@@ -5,10 +5,9 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "build": "node index.js",
-    "start": "webpack serve --open",
     "test": "mocha --require esm --extension js --recursive test",
-    "test:clean": "rimraf build/* test/build/* test/archives/*"
+    "test:clean": "rimraf build/* test/build/* test/archives/*",
+    "package-release": "node ./lib/package-release.js"
   },
   "bin": {
     "bookpub": "./cli.js"
@@ -69,5 +68,6 @@
     "esm": "^3.2.25",
     "execa": "^7.1.1",
     "mocha": "^10.2.0"
-  }
+  },
+  "status": "ALPHA"
 }
