@@ -1,296 +1,281 @@
-# BookPub - book publishing with web-driven tools
-
 <p align="center">
-  <img src="assets/bookpub-logo.svg" width="70%" height="70%" alt="BookPub logo header"/>
+  <img src="assets/bookpub-logo.svg" align="right" hspace="30" vspace="30" width="30%" height="30%" alt="BookPub logo header"/>
 </p>
 
-**BookPub** is an advanced book publishing framework for creating manuscripts in Markdown/HTML/CSS/Javascript, and publishing them into any format (PDF, ePub, MOBI, HTML, Print).
+# Bookpub
 
-BookPub manages a manuscript-to-market toolchain, allowing publishing firms, authors and other stakeholders to manage one markdown-based manuscript source, which can be professionally designed and typeset (even for print) using HTML, CSS and Javascript Web Standards. Bookpub will build your manuscript into any format (PDF, EPUB, MOBI, HTML).
+A forward-thinking book publishing pipeline; a modular CLI that helps you publish books written in **Markdown+EJS** to formats like PDF, EPUB, HTML **or anything else you can think of**!
+
+BookPub manages a manuscript-to-market toolchain, allowing publishing firms, authors and other stakeholders to manage one markdown-based manuscript source, which can be professionally designed and typeset (even for print) using HTML, CSS and Javascript Web Standards. Bookpub will build your manuscript into any format (PDF, EPUB, MOBI, HTML). BookPub offers:
+
+- **Customizable Pipelines**: Stage-based conversions (e.g. EJS → Markdown → HTML → PDF)  
+- **Local Overrides**: Extend or override core stages by dropping your own stage folder  
+- **Flexible Themes**: Separate assets for different builds (SCSS → CSS)  
+- **Scaffolding**: Kickstart a new project with `bookpub new my-book`
+
+---
+
+## Table of Contents
+
+- [Features](#features)  
+- [Installation](#installation)  
+- [Quick Start](#quick-start)  
+- [Project Structure](#project-structure)  
+- [Using Pipelines](#using-pipelines)  
+- [Working With Meta](#working-with-meta)  
+- [Overriding or Adding Stages](#overriding-or-adding-stages)  
+- [Build Outputs](#build-outputs)  
+- [FAQ](#faq)  
+- [License](#license)
+
+---
 
 ## Features
 
-1. **[Markdown](https://www.markdownguide.org/) Based Manuscript**
-    * **It's All Plain Text.**
+- **EJS + Markdown**: Write `.md.ejs` and dynamically insert metadata or logic right inside your markdown.  
+- **Stage-Based Pipeline**: Each stage transforms your manuscript in sequence. Core stages:  
+  - **ejs** (EJS → Markdown)  
+  - **markdown** (Markdown → HTML using Pandoc)  
+  - **theme** (SCSS → CSS, copy assets)  
+- **Extensible**: Drop in your own stage folders or define new build pipelines.  
+- **Config-Driven**: A single `book.config.yml` holds metadata, pipeline stages, and build-specific overrides.  
+- **Scaffolding**: Spin up a new project with a single command that includes all the boilerplate.
 
-      Easy-to-read, easy-to-write using the industry standard, Markdown, for authoring content.
-    * **Lot's of Ready Made Apps/Tools.**
+---
 
-      Because markdown is ubiquitous for authoring content, there are already loads of tools and apps out there. That said, you can use any plain text editor (or Code Editor)
-    * **Easy to Manage Edits & Versions.**
+## Installation
 
-      Because it's plain text, we can use the most robust versioning software out there. We recommend github.com, but you can use any versioning platform.
-2. **Javascript Enabled With [EJS](https://ejs.co/)**
-    * **BookPub** uses EJS (Embedded Javascript) Templating which means that the entire world of javascript is at your disposal:
+```bash
+# Option 1: Install globally
+npm install -g bookpub
 
-      * Use conditionals to only render certain sections of your manuscript for certain formats (like pdf, epub, mobi, etc)
+# Option 2: Use npx without installing
+npx bookpub --help
 
-      * Use any NPM package or javascript library, to add a world of possibilities to your book
-
-      * Use custom layouts and includes to reuse parts of your manuscript anywhere
-
-  * **Automatic Conversion of quotes and en/em-dashes**
-
-    * Using Smartypants, all quotes and en/em-dashes will be automatically converted to curly (left/right) quotes and the relevant UTF-8 Codes/Typeset for en/em-dashes
-
-  * **Multiple Formats**
-
-    * Formats currently supported: PDF-ebook, PDF-print, HTML
-
-    * Coming very soon (epub, mobi, and more)
-
-## Install
-
-### Prerequisites
-
-* [NodeJS](https://nodejs.org/) - You will need to have a working install of Node.js (which will include NPM) in order to use BookPub. There are two options:
-
-    * [NodeJS Installer](https://nodejs.org/en/download)
-
-      If you don't plan to use NodeJS outside of using BookPub, we recommend using the NodeJS Installer [by visiting their download page](https://nodejs.org/en/download) and selecting the installer for your operating system.
-
-    * [NVM (Node Version Manager)](https://github.com/nvm-sh/nvm)
-
-      If you plan on using NodeJS in other contexts, we recommend using NVM (NodeJS Version Manager). It is far more robust and flexible. You can visit [the NVM Github page](https://github.com/nvm-sh/nvm) for detailed instructions. But generally it can be installed using the following command:
-
-      `curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash`
-
-* [PrinceXML](https://princexml.com) - You will need to install PrinceXML to build PDFs
-
-  We've chosen the PrinceXML library because it is the best available for converting HTML/CSS/Javascript to Print-Ready PDFs. (At some point we may add other options.)
-
-  * [Installation and Setup Instructions Here](https://www.princexml.com/doc/installing/)
-
-### Creating a New **BookPub** Project
-
-  * From the command line, type:
-
-    `npx create-bookpub-project`
-
-    <small>*If this is your first time, please select (y) when prompted.*</small>
-
-    This will install BookPub (globally) on your system. You will then be asked a series of questions to help setup your new project.
-
-    This is an example book to demonstrate how to use HTML/CSS/Javascript to publish a book. It's built off of the example [Boom! microformat here](https://alistapart.com/article/boom/). The answers to your `npx create-bookpub-project` will be used to fill in the title, author, etc.
-
-  * Test Drive - You can test drive your new project by changing into your new project `cd [your-project]` and creating a basic HTML format of your example book:
-
-      `bookpub build -t html`
-
-      This will build the HTML format of your new book.
-
-## Usage
-
-We created **BookPub** in an effort to share an example of best-practices (or at least our opinion) for managing a manuscript-to-print pipeline. Rather than forcing people to follow rigid rules, we've attempted to provide a maximum of flexibility, while showing our example of the converntions that we use.
-
-**BookPub** is essentially an HTML/CSS/Javascript based book framework. All the different book formats are built off of this foundation. That said, we've attempted to help streamline the process by integrating common industry tools and best-practices.
-
-### 1. Getting Started
-
-Your new book project will have the following structure:
-
-```plain
-my-book
-  |- assets/                # Media assets (illustrator, photoshop, etc.)
-  |- build/                 # Built book formats (pdf, html, epub)
-  |- manuscript/            # Manuscript source
-    |-- index.md.ejs        # Starting-point ("entryfile") for your manuscript
-    |-- frontmatter/        # Frontmatter content (titlepage, preface, etc.)
-    |-- mainmatter/         # Main content (chapters, etc.)
-    |-- backmatter/         # Backmatter content (author's note, bibliography, index)
-    |-- theme/              # Theme & Design elements
-      |--- css/             # CSS for each format
-      |--- js/              # Javascript files
-      |--- media/           # Media & Artwork
-      |--- fonts/           # Custom fonts
-      |--- svgs/            # SVG files
-  |- release-builds/        # Publicly released builds
-  |- book.config.yml        # Meta and Config Data (ISBN, Title, etc.)
-  |- CHANGELOG.md           # This is where you can describe the changes for each new version
-  |- nodemon.js             # Nodemon config file (for Dev Mode) watches for (rebuilds) upon manuscript change (edit carefully)
-  |- package.json           # Package config file
-  |- README.md              # Documentation for Contributors
-  |- webpack.config.js      # Webpack config file (for Dev Mode) reloads new builds into browser
+# Option 3: Local project install
+npm install bookpub --save-dev
 ```
 
-### 2. Managing Your Book's Meta Data (book.config.yml)
+---
 
-The `book.config.yml` is a [YAML File](https://www.cloudbees.com/blog/yaml-tutorial-everything-you-need-get-started) used to store your book's meta-data and configuration settings. You can use this file to store details about the book, like the title, isbn, author, lccn, etc.
+## Quick Start
 
-All the data in `book.config.yml` is made available for you to use in the manuscript source.
+1. **Create a new Bookpub project**:
+   ```bash
+   bookpub new my-book
+   ```
+   Or:
+   ```bash
+   npx create-bookpub-project my-book
+   ```
+   This scaffolds a folder `my-book/` with all necessary boilerplate.
 
-**For Example:**
+2. **Install dependencies**:
+   ```bash
+   cd my-book
+   npm install
+   ```
+   (If you’ve globally installed `bookpub`, this step is optional for running commands, but recommended.)
 
-Let's say that we have the following `book.config.yml` file:
+3. **Build a PDF**:
+   ```bash
+   bookpub build pdf
+   ```
+   The output is in `build/pdf/`.
 
-```yml
-# book.yml
+4. **Open** `manuscript/index.md.ejs` to write your content, or **customize** `book.config.yml` with your book’s metadata and pipeline stages.
 
-title: My Book Title
-isbn-13: 012345678910
+---
 
-# (the rest of your meta data)
+## Project Structure
 
-settings:
-  entryfile: index.md.ejs
+When you create a new Bookpub project (e.g. `my-book/`), you’ll typically see:
+
+```
+my-book/
+├── .gitignore
+├── README.md
+├── book.config.yml
+├── manuscript/
+│   ├── index.md.ejs
+│   └── themes/
+│       ├── css/
+│       │   ├── styles.pdf.scss
+│       │   └── styles.epub.scss
+│       ├── images/
+│       └── ...
+├── stages/
+├── package.json
+└── ...
 ```
 
-In your `index.md.ejs` you can access the book title using EJS syntax:
+- **`book.config.yml`**: Central config for metadata, pipeline definitions, etc.
+- **`manuscript/`**: The source files for your book.  
+  - `index.md.ejs` is your main entry point, combining EJS + Markdown.  
+  - `themes/` holds SCSS/CSS, images, fonts, etc.
+- **`stages/`**: (Optional) Put custom stages or override existing ones here.  
+- **`package.json`**: The project’s local dependencies (including `bookpub`).
 
-```ejs
-The title of my book is <%= meta.title %>.
+---
+
+## Using Pipelines
+
+### Default Pipelines
+
+Bookpub comes with default pipelines for `pdf` and `epub`:
+
+```yaml
+# If you don't define custom pipelines, these defaults apply:
+# pdf:
+#   1) ejs
+#   2) markdown
+#   3) theme
+# epub:
+#   1) ejs
+#   2) markdown
+#   3) theme
 ```
 
-Your build file will then be renderred as:
+So `bookpub build pdf` automatically runs `ejs → markdown → theme`.
 
+### Custom Pipelines in `book.config.yml`
+
+```yaml
+# book.config.yml
+
+meta:
+  title: "My Book"
+  author: "Famous Name"
+
+buildPipelines:
+  pdf-lg:
+    meta:
+      title: "My Book (Large Print)"
+      fontSize: 18
+    stages:
+      - name: ejs
+      - name: markdown
+      - name: theme
+      - name: largePrint
+        config:
+          lineSpacing: 1.5
 ```
-The title of my book is My Book Title.
+
+- **`pdf-lg`** pipeline: runs `ejs → markdown → theme → largePrint`.  
+- **`meta`** inside `pdf-lg` overrides the top-level `meta` fields when building `pdf-lg`.
+
+Run it:
+```bash
+bookpub build pdf-lg
 ```
 
-### 3. Working With Your Manuscript
+---
 
---> **One Manuscript To Rule Them All** <--
+## Working With Meta
 
-**BookPub's** philosophy stems from the DRY (Don't Repeat Yourself) principle. As such, we want to always/only have one manuscript from which all the formats are built.
+Your `.md.ejs` can reference metadata from `book.config.yml` like this:
 
-You can arrange your manuscript in any way you like: One giant document, or a complicated breakout of different files and sections. We have tried to give users as much flexibility as possible.
+```markdown
+# <%= meta.title %>
 
-That said, there are a few things to keep in mind:
+Author: <%= meta.author %>
 
---> **THREE SIMPLE RULES** <--
+This is dynamic EJS. If you specify `meta.title` in `book.config.yml`,
+it appears here at build time.
+```
 
-1. All source code for your manuscript must be stored in the `manuscript/` folder.
+1. **Top-level** `meta` applies to **all** builds.  
+2. **Pipeline-specific** `meta` (under `buildPipelines.myPipeline.meta`) overrides top-level values for that build only.
 
-2. All files must end with .ejs (except for files in the theme folder)
+---
 
-    * Our convention for naming files has been `[name].[filetype].ejs`.
-      * e.g. So, if we had an html file, it would be named `myname.html.ejs`
-    * For a tutorial on using EJS, visit [the EJS Site](https://ejs.co/)
+## Overriding or Adding Stages
 
-3. The entryfile (the beginning of your manuscript) must be specified in your book.config.yml (entryfile).
+### Overriding a Built-In Stage
 
-    * We recommend keeping the first file as `index.md.ejs`
+If you want to modify the core **ejs** stage (for example), just create a matching folder in your project:
+```
+my-book/
+└─ stages/
+   └─ ejs/
+      └─ index.js
+```
+Inside `index.js`, export a `run()` function:
 
-    * You can choose another name or location. But it must be specified in your `book.config.yml`
+```js
+// my-book/stages/ejs/index.js
+export async function run(manuscript, { stageConfig, globalConfig }) {
+  // Your custom logic
+  // e.g., call the built-in ejs stage, then do extra stuff
+  // or replace it entirely
+  return manuscript;
+}
+```
 
-      For example, if you want your entryfile to be `myentryfile.md.ejs`, record it in your book.config.yml as:
+Bookpub automatically detects `stages/ejs/index.js` and uses it **instead** of the built-in EJS stage.
 
-      ```yml
-      # book.config.yml
+### Creating a New Stage
 
-      # Let's set our entryfile
-      settings:
-        entryfile: myentryfile.md.ejs
+Just name a folder in `stages/` (e.g., `stages/compressImages/`) with an `index.js`:
 
-      ```
-4. Ok, so maybe we lied...another small rule/recommendation concerning your `theme` folder.
+```js
+// my-book/stages/compressImages/index.js
+export async function run(manuscript, { stageConfig, globalConfig }) {
+  console.log("Compressing images...");
+  // do your stuff
+  return manuscript;
+}
+```
 
-    * Keep in mind, during the build process, your `theme` folder will be copied over as-is.
-    * If you want to use SASS (.scss) to handle your css, you will need to keep the css as it is when your new book project is built. We will be changing this later, but for now, it's a requirement for SASS.
+Then add it to a pipeline in `book.config.yml`:
 
-### 4. Building Your Book
+```yaml
+buildPipelines:
+  pdf:
+    stages:
+      - name: ejs
+      - name: compressImages
+      - name: markdown
+      - name: theme
+```
 
-The basic command for building a specific format (type) of your book is the following:
+---
 
-`bookpub build -t [format-type]`
+## Build Outputs
 
-1. The HTML format of your book
+By default, Bookpub outputs to:
+```
+build/<buildType>/
+```
+For example:
+```
+build/pdf/
+build/epub/
+build/pdf-lg/
+```
+That folder might include:
+- **index.html** (or whatever each stage produces)
+- **themes/** (copied or compiled assets)
+- Final PDF, EPUB, or other output generated by custom stages
 
-  * All that is needed to build the HTML format of your book is to type this command in your project's home directory:
+---
 
-    `bookpub build -t html`
+## FAQ
 
-    This will build your manuscript into an HTML version of your book, located in the `build/html/` folder.
+**Q**: *Do I need [Pandoc](https://pandoc.org) installed for the markdown → HTML stage?*  
+**A**: Yes, the default markdown stage uses Pandoc. If you don’t have it, you can either install Pandoc or override the stage with your own converter.
 
-2. The Print-PDF version of your book
+**Q**: *Can I define multiple build types?*  
+**A**: Absolutely! Each build type is a separate pipeline in `book.config.yml`. Use `bookpub build <buildType>` to run that pipeline.
 
-  * To build a pdf typeset version of your book for print, type this command in your project's root directory:
+**Q**: *What if I just want to write plain Markdown without EJS?*  
+**A**: You can. If the EJS stage doesn’t find `.md.ejs`, it will skip. Or you can remove the ejs stage from your pipeline altogether.
 
-    `bookpub build -t pdf`
+---
 
-    This will build your manuscript into a print-ready PDF version of your book in the `build/pdf/` folder.
+## License
 
-### 5. A Development Workflow
+[MIT](./LICENSE) – this means you’re free to use, modify, and distribute Bookpub as you see fit. 
 
---> **DEV MODE** <--
-
-We built the **BookPub** framework to make writing, designing, typesetting and formatting your book as streamlined and instantaneous as possible.
-
-With **DEV MODE**, you can work in REAL TIME. Changes in your manuscript are rebuilt and reloaded in your browser in real time.
-
-**DEV MODE** will launch a browser window that will display the newly built version of your book, which will be updated as changes are made to your manuscript.
-
-#### HTML "DEV" Mode
-
-To work on the HTML version of your book in "dev" mode, type:
-
-   `bookpub dev -t html`
-
-Now, as you edit your manuscript, the final HTML build will automatically be reloaded into your browser with the new updates.
-
-> Developer Note:
->
-> 1. We are using Nodemon to watch for changes in your manuscript directory and build a new copy upon any change.
->
->     * We have included your own nodemon.js file if you would like to make changes (tread carefully)
->
-> 2. We are using Webpack to serve any new builds to your browser and refresh when a new build is created.
->
->     * We have included your own webpack.config.ejs if you would like to make changes (tread carefully)
-
-#### PDF "DEV" MODE
-
-To work on the PDF version of your book in "dev" mode, type:
-
-`bookpub dev -t pdf`
-
-* This will create two builds
-
-  * The index.html file
-
-    This will be loaded into the browser automatically and will use the styles.pdf.css and theme for the book. Like in the HTML Dev Mode, as you edit your manuscript source code, both the index.html file and the index.pdf will be rebuilt. The index.html will be reloaded into your browser automatically.
-
-  * The index.pdf file
-
-    This will need to be manually loaded into your own choice for PDF viewer. Generally speaking, your PDF viewer will reload the index.pdf file each time it is built (whenever you edit the manuscript source code).
-
-### 6. Themes: Book Design & Typesetting
-
-**BookPub** uses industry standard web technologies for the design and layout of your book: HTML, CSS(3), and Javascript.
-
-We chose to use web standards for the design element because they are free, they are universal, they are flexible, and there is an unending supply of resources for learning and working with these standards.
-
-> Developer Note:
->
-> There is clearly a significant audience who prefer to write their books using tools like Pandoc and LaTex for print typesetting. In our experience, even though these tools are powerful, they also requiring a significant learning curve, and their implementation is difficult to say the least. Additionally, finding designers who can work with web standards is fairly universal and international.
-
-#### Your Theme Folder
-
-We have intentionally chosen to place all custom styling/fonts/media/etc. in the `theme/` folder of your manuscript/ directory.
-
-> Developer Note:
->
-> You can actually use whatever structure/location you want. We decided to use the `theme/` convention in order to allow a consistent way to drop new formatting/themes into your book by simply copying a new theme into your manuscript folder.
-
-#### Styling with CSS or SASS
-
-**BookPub** allows you to use Plain CSS (.css), or Sass CSS (*.scss) to style your html book.
-
-  * If you change your .css files to .scss, **BookPub** will use Sass to build your CSS prior to its use in the build process [(More information about SASS)](https://sass-lang.com/)
-
-  * We recommend using a new stylesheet for each format
-    * This allows you to create a conditional statement in your index.md.ejs file, that loads a stylesheet based upon the output type (format). So if you are building your HTML format, the styles.html.scss file will be used.
-
-### 7. Working With the Print-Ready PDF
-
-We have chosen to use PrinceXML to create the PDF builds. In the future, we may also include the ability to use other pdf generators, but for now it's PrinceXML.
-
-Please consult the [princexml.com](princexml.com) website for their documentation on building PDFs from HTML/CSS/Javascript
-
-> Developer Note:
->
-> PrinceXML is a pay-for-license and proprietary software, but they allow full use of their software. The only tradeoff for free use is the presence of a small logo/watermark on the very first page of any PDF that is generated.
->
-> You can also use Docusaurus (an online PDF generator that uses PrinceXML) as a pay-per-service version that uses PrinceXML.
->
-> Currently, PrinceXML seems to have the best PDF rendering engine, especially for advanced typesetting, using HTML/CSS3/Javascript. We will continue to explore other possibilities as we deem them sufficient in their feature-set.
+**Enjoy publishing!** If you have questions or ideas, feel free to open an issue or PR on the GitHub repo. 
+```

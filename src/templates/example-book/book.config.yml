@@ -10,9 +10,10 @@ meta:
   lccn: 123456789
   subject: Non-fiction
   rights: All Rights Reserved
-settings:
-  entryfile: index.md.ejs
-ejs-options:
-  await: true
-  preprocessor-include: null
-  delimiter: null
+
+# You can define buildPipelines if you want
+# buildPipelines:
+#   pdf:
+#     - name: ejs
+#     - name: markdown
+#     - name: theme
