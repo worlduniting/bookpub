@@ -5,9 +5,12 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
+    "start": "node bin/bookpub.js",
+    "test": "mocha"
   },
   "bin": {
-    "bookpub": "./bin/bookpub.js"
+    "bookpub": "./bin/bookpub.js",
+    "create-bookpub-project": "./bin/create-bookpub-project.js"
   },
   "repository": {
     "type": "git",
@@ -38,37 +41,27 @@
   },
   "homepage": "https://github.com/worlduniting/bookpub#readme",
   "dependencies": {
-    "chalk": "^4.1.2",
-    "commander": "^9.4.1",
-    "ejs": "^3.1.9",
-    "ejs-lint": "^2.0.0",
-    "fs-extra": "^10.1.0",
-    "inquirer": "^9.1.5",
-    "install": "^0.13.0",
-    "js-yaml": "^4.1.0",
-    "moment": "^2.29.4",
-    "nodemon": "^2.0.22",
-    "npm": "^10.9.2",
-    "sass": "^1.60.0",
-    "smartypants": "^0.1.6",
-    "tar": "^6.1.14",
-    "unified": "^10.1.2",
-    "webpack": "^5.76.3",
-    "webpack-cli": "^5.0.1",
-    "webpack-dev-server": "^4.13.1"
-
-    "commander": "^9.4.1",
-    "chalk": "^4.1.2",
+    "chalk": "^5.2.0",
+    "commander": "^10.0.1",
+    "fs-extra": "^11.1.1",
+    "inquirer": "^9.2.3",
     "js-yaml": "^4.1.0",
     "sass": "^1.57.0",
-    "ejs": "^3.1.8",
-    "fs-extra": "^10.1.0"
+    "ejs": "^3.1.8"
   },
   "devDependencies": {
+    "mocha": "^10.2.0",
     "chai": "^4.3.7",
-    "esm": "^3.2.25",
-    "execa": "^7.1.1",
-    "mocha": "^10.2.0"
+    "chai-fs": "^2.0.0",
+    "mock-stdin": "^1.0.0"
   },
-  "status": "ALPHA"
+  "files": [
+    "bin",
+    "src",
+    "test"
+  ],
+  "engine": {
+    "node": ">=14.0.0"
+  },
+  "status": "BETA"
 }
