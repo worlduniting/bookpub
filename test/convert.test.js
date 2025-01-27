@@ -20,10 +20,10 @@ describe(chalk.cyanBright('BookPub should convert manuscript into the correct fo
 
 
     it('should create the html output directory and index.html file\n\n', async () => {
-        const outputType = 'html';
-        const outputDir = path.join(__dirname, 'build', outputType);
+        const buildType = 'html';
+        const outputDir = path.join(__dirname, 'build', buildType);
 
-        await convert(book, manuscriptDir, outputType, outputDir, isTest);
+        await convert(book, manuscriptDir, buildType, outputDir, isTest);
 
         const outputPath = path.join(outputDir, 'index.html');
         const outputFileExists = await fsPromises.stat(outputPath).then(() => true).catch(() => false);
@@ -31,12 +31,12 @@ describe(chalk.cyanBright('BookPub should convert manuscript into the correct fo
     });
 
     it('should create the pdf output directory and index.html file\n        (This will be used to build the PDF)\n', async () => {
-        const outputType = 'pdf';
-        const outputDir = path.join(__dirname, 'build', outputType);
+        const buildType = 'pdf';
+        const outputDir = path.join(__dirname, 'build', buildType);
 
         console.log(chalk.yellowBright(`Checking for ${chalk.white('index.html')} in test output directory:\n      ${chalk.white(outputDir)}`));
 
-        await convert(book, manuscriptDir, outputType, outputDir, isTest);
+        await convert(book, manuscriptDir, buildType, outputDir, isTest);
 
         const outputHtmlPath = path.join(outputDir, 'index.html');
         const outputHtmlFileExists = await fsPromises.stat(outputHtmlPath).then(() => true).catch(() => false);
@@ -49,10 +49,10 @@ describe(chalk.cyanBright('BookPub should convert manuscript into the correct fo
 /*
 
     it('should create the pdf output directory and pdf file', async () => {
-        const outputType = 'pdf';
-        const outputDir = path.join(__dirname, 'build', outputType);
+        const buildType = 'pdf';
+        const outputDir = path.join(__dirname, 'build', buildType);
 
-        await convert(book, manuscriptDir, outputType, outputDir, isTest);
+        await convert(book, manuscriptDir, buildType, outputDir, isTest);
 
         // Check that the pdf file exists
         console.log('Checking for pdf file');

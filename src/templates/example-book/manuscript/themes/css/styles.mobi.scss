@@ -103,7 +103,7 @@ h1::before {
 /* page breaks */
 
 div.frontcover, div.halftitlepage, div.titlepage, div.dedication, div.aboutmytitle, div.toc, div.preface, 
-div.partone, div.part'../../../../../../../example-book/manuscript/theme/css', div.chapter, div.chapterzero, div.epilogue, div.authorsnote, div.aboutauthor,
+div.partone, div.part'../../../../../../../example-book/manuscript/themes/css', div.chapter, div.chapterzero, div.epilogue, div.authorsnote, div.aboutauthor,
 div.acknowledgements, div.foreword { page-break-before: right }
 div.imprint, div.endorsements, div.contact { page-break-before: always }
 div.reference, 
@@ -163,25 +163,25 @@ div.aboutauthor img {
   height: 2.72in;
 }
 /* parts */
-div.part'../../../../../../../example-book/manuscript/theme/css', div.partone {
+div.part'../../../../../../../example-book/manuscript/themes/css', div.partone {
   text-align: center;
 }
 div.partone h1 {
   text-transform: none;
   text-align: center;
 }
-div.part '../../../../../../../example-book/manuscript/theme/css'h1 {
+div.part '../../../../../../../example-book/manuscript/themes/css'h1 {
   text-transform: none;
   text-align: center;
 }
-div.part'../../../../../../../example-book/manuscript/theme/css', div.partone h2 {
+div.part'../../../../../../../example-book/manuscript/themes/css', div.partone h2 {
   text-transform: none;
   text-align: center;
 }
 div.partone p {
   text-align: center;
 }
-div.part '../../../../../../../example-book/manuscript/theme/css'p {
+div.part '../../../../../../../example-book/manuscript/themes/css'p {
   text-align: center;
 }
 div.tocPart { margin: .3em 0 0 0}

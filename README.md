@@ -118,11 +118,11 @@ my-book/
 
 ---
 
-## Using Pipelines
+## Using Pipelines & Stages
 
-### Default Pipelines
+### Default Pipelines & Stages
 
-Bookpub comes with default pipelines for `pdf` and `epub`:
+Bookpub comes with default pipelines for `pdf` and `epub` that have default stages:
 
 ```yaml
 # If you don't define custom pipelines, these defaults apply:
@@ -130,10 +130,13 @@ Bookpub comes with default pipelines for `pdf` and `epub`:
 #   1) ejs
 #   2) markdown
 #   3) theme
+#   4) writeHtml
+
 # epub:
 #   1) ejs
 #   2) markdown
 #   3) theme
+#   4) writeHtml
 ```
 
 So `bookpub build pdf` automatically runs `ejs → markdown → theme`.
@@ -277,5 +280,4 @@ That folder might include:
 
 [MIT](./LICENSE) – this means you’re free to use, modify, and distribute Bookpub as you see fit. 
 
-**Enjoy publishing!** If you have questions or ideas, feel free to open an issue or PR on the GitHub repo. 
-```
+**Enjoy publishing!** If you have questions or ideas, feel free to open an issue or PR on the GitHub repo.

@@ -1,7 +1,7 @@
-<% if (outputType === 'pdf' || 'html') { %>
+<% if (buildType === 'pdf' || 'html') { %>
 
   <div class="frontcover" id="cov">
-    <img src="theme/images/cover.jpg" />
+    <img src="themes/images/cover.jpg" />
   </div>
 
 <% } else { %>
@@ -14,7 +14,7 @@
   </head>
   <body>
     <div id="cover-image">
-      <img src="theme/images/cover.jpg" alt="<%= meta.title %>"/>
+      <img src="themes/images/cover.jpg" alt="<%= meta.title %>"/>
     </div>
   </body>
   </html>
