@@ -50,10 +50,14 @@
     "sass": "^1.57.0"
   },
   "devDependencies": {
+    "browser-sync": "^3.0.3",
     "chai": "^4.3.7",
     "chai-fs": "^2.0.0",
+    "chokidar": "^4.0.3",
+    "live-server": "^1.2.2",
     "mocha": "^10.2.0",
-    "mock-stdin": "^1.0.0"
+    "mock-stdin": "^1.0.0",
+    "open": "^10.1.0"
   },
   "files": [
     "bin",

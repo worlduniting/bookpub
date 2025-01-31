@@ -18,39 +18,47 @@ export async function build({ buildtype }) {
     const configFile = fs.readFileSync(configPath, 'utf8');
     const config = YAML.load(configFile) || {};
 
-    const chosenBuildType = buildtype || 'pdf';
+    const chosenBuildType = buildtype || 'html';
     const userPipelines = config.buildPipelines || {};
 
-    let pipelineConfig = userPipelines[chosenBuildType];
-    if (!pipelineConfig) {
-      pipelineConfig = defaultPipelines[chosenBuildType];
+    let pipelineConfig = userPipelines[chosenBuildType] || {};
+    let pipelineMeta = pipelineConfig.meta || {};
+
+    // Default to global meta if present
+    const topLevelMeta = config.meta || {};
+    const mergedMeta = { ...topLevelMeta, ...pipelineMeta };
+
+    // Ensure meta.html exists and merge build-specific meta into it
+    if (!mergedMeta.html) {
+      mergedMeta.html = {};
+    }
+    mergedMeta.html.version = pipelineMeta.version || topLevelMeta.version || 'Unknown';
+
+    // Extract user-defined stages or use defaultPipelines
+    let pipelineStages = pipelineConfig.stages;
+
+    if (!pipelineStages) {
+      if (Array.isArray(defaultPipelines[chosenBuildType])) {
+        pipelineStages = defaultPipelines[chosenBuildType]; // Use array directly
+      } else {
+        pipelineStages = defaultPipelines[chosenBuildType]?.stages;
+      }
     }
 
-    if (!pipelineConfig) {
-      throw new Error(`No pipeline found for build type "${chosenBuildType}".`);
+    if (!pipelineStages) {
+      throw new Error(
+        `No stages found for build type "${chosenBuildType}". Define stages in book.config.yml or ensure a defaultPipeline exists.`
+      );
     }
 
     console.log(chalk.blue(`\nBuilding for: ${chosenBuildType}\n`));
-
-    let pipelineMeta = {};
-    let pipelineStages = [];
-
-    if (Array.isArray(pipelineConfig)) {
-      pipelineStages = pipelineConfig;
-    } else {
-      pipelineMeta = pipelineConfig.meta || {};
-      pipelineStages = pipelineConfig.stages || [];
-    }
-
-    const topLevelMeta = config.meta || {};
-    const mergedMeta = { ...topLevelMeta, ...pipelineMeta };
 
     let manuscript = { content: null, buildType: chosenBuildType };
 
     for (const stageDef of pipelineStages) {
       const { name: stageName, config: stageStageConfig = {} } = stageDef;
 
-      console.log(chalk.green(`Running stage: ${stageName}...`));
+      console.log(chalk.green(`Running stage: `) + chalk.yellow(stageName) + chalk.green(`...`));
 
       const stageModule = await importStage(stageName);
       if (stageModule && typeof stageModule.run === 'function') {

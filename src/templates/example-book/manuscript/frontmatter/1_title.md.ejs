@@ -8,7 +8,7 @@
 
 <div class="titlepage">
 
-<h1 class="no-toc"><%= meta.title %></h1>
+<h1 class="no-toc"><%= (meta[buildType] && meta[buildType].title) || meta.title %></h1>
 <h2 class="no-toc"><%= meta.subtitle %></h2>
 <h3 class="no-toc">First Edition</h3>
 

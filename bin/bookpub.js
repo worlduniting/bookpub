@@ -3,25 +3,22 @@ import { program } from 'commander';
 import chalk from 'chalk';
 import { build } from '../src/commands/build.js';
 import { newProject } from '../src/commands/new.js';
+import { dev } from '../src/commands/dev.js';
 
-/**
- * Main CLI entry point.
- * Defines subcommands like "build" and "new".
- */
 program
   .name('bookpub')
   .description('A modular pipeline for building books from EJS + Markdown')
   .version('1.0.0');
 
-// "build" subcommand
+// Build command
 program
   .command('build [buildtype]')
-  .description('Builds the manuscript into the specified output format (pdf, epub, etc.)')
+  .description('Builds the manuscript into the specified output format (pdf, epub, html, etc.)')
   .action(async (buildtype) => {
     await build({ buildtype });
   });
 
-// "new" subcommand
+// New project command
 program
   .command('new <projectName>')
   .description('Create a new BookPub project')
@@ -30,5 +27,13 @@ program
     await newProject(projectName);
   });
 
-// Parse
+// Dev command
+program
+  .command('dev <buildType>')
+  .description('Run Bookpub in development mode with live reloading')
+  .action(async (buildType) => {
+    await dev(buildType);
+  });
+
+// Parse arguments
 program.parse(process.argv);

@@ -10,10 +10,3 @@ meta:
   lccn: 123456789
   subject: Non-fiction
   rights: All Rights Reserved
-
-# You can define buildPipelines if you want
-# buildPipelines:
-#   pdf:
-#     - name: ejs
-#     - name: markdown
-#     - name: theme
