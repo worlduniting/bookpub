@@ -1,3 +1,42 @@
+/**
+ * @module newProject
+ * @description
+ * This module provides functionality for scaffolding a new Bookpub project.
+ * It prompts the user for project and book details, copies a template (either the default or a custom git-cloned one),
+ * updates/creates the project's package.json, and writes a new book.config.yml file.
+ *
+ * The generated book.config.yml now follows a new structure:
+ *
+ *   global:
+ *     meta:
+ *       // Global metadata applied to all build pipelines
+ *     stages:
+ *       // Default stage-specific settings applied in all pipelines
+ *
+ *   #buildPipelines:
+ *   #  html:
+ *   #    meta:
+ *   #      version: 2.1
+ *   #      title: The HTML Title
+ *   #
+ *   #  pdf:
+ *   #    meta:
+ *   #      version: 2.1
+ *   #      title: The PDF Title
+ *   #    stages:
+ *   #      - name: ejs
+ *   #        config:
+ *   #          rmWhitespace: false  # Overrides global setting
+ *   #      - name: markdown
+ *   #      - name: theme
+ *   #      - name: writeHtml
+ *   #      - name: pdf
+ *
+ * @example
+ * // To create a new Bookpub project:
+ * bookpub new my-book
+ */
+
 import inquirer from 'inquirer';
 import chalk from 'chalk';
 import path from 'path';
@@ -10,20 +49,14 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 /**
- * newProject()
- * Creates a new Bookpub project by prompting the user for:
- *  - Project Name (bp => both package.json & book.config.yml)
- *  - Book Title (b => book.config.yml)
- *  - Subtitle (b => book.config.yml)
- *  - Author's Name (bp => both)
- *  - Description (bp => both)
- *  - Version (bp => both)
- *  - Custom book template URL (optional)
- *    => If provided, we "git clone" that URL into a temporary folder
- *       and copy its contents instead of using the built-in example-book template
+ * Prompts the user and creates a new Bookpub project.
+ *
+ * @async
+ * @function newProject
+ * @param {string} initialProjectName - The default project name.
  */
 export async function newProject(initialProjectName) {
-  // 1. Prompt the user for input
+  // 1. Prompt the user for project details
   const answers = await inquirer.prompt([
     {
       type: 'input',
@@ -69,7 +102,6 @@ export async function newProject(initialProjectName) {
     }
   ]);
 
-  // Store final answers
   const projectName = answers.projectName;
   const bookTitle = answers.bookTitle;
   const subTitle = answers.subTitle;
@@ -89,19 +121,15 @@ export async function newProject(initialProjectName) {
 
   console.log(chalk.greenBright(`\nCreating new Bookpub project: "${projectName}"\n`));
 
-  // 3. Decide on the source of our template
+  // 3. Decide on the template source
   let templateSource;
   let clonedTempPath = '';
 
   if (templateGitUrl) {
-    // If a custom template URL was provided, git clone it to a temp folder
     console.log(chalk.blue(`Cloning book template from: ${templateGitUrl}`));
-    clonedTempPath = path.join(__dirname, '../../temp-clone'); // or any suitable temp location
-
-    // Ensure we remove any old leftover temp folder
+    clonedTempPath = path.join(__dirname, '../../temp-clone');
     fs.removeSync(clonedTempPath);
 
-    // Clone into temp folder
     const cloneResult = spawnSync('git', ['clone', templateGitUrl, clonedTempPath], {
       stdio: 'inherit'
     });
@@ -111,16 +139,13 @@ export async function newProject(initialProjectName) {
       process.exit(cloneResult.status || 1);
     }
     console.log(chalk.green('Git clone successful.\n'));
-
-    // We'll use the cloned folder as our template source
     templateSource = clonedTempPath;
   } else {
-    // Otherwise, fall back to the built-in example-book template
     templateSource = path.join(__dirname, '../templates/example-book');
     console.log(chalk.green('Installing default example-book template...\n'));
   }
 
-  // 4. Copy the template to the project folder
+  // 4. Copy the template into the project folder
   try {
     await fs.copy(templateSource, projectPath);
   } catch (err) {
@@ -128,27 +153,23 @@ export async function newProject(initialProjectName) {
     process.exit(1);
   }
 
-  // If we cloned, optionally remove the clonedTempPath after copying
   if (clonedTempPath && fs.existsSync(clonedTempPath)) {
     fs.removeSync(clonedTempPath);
   }
 
-  // 5. Prepare or update package.json
+  // 5. Update package.json with user inputs
   const packageJsonPath = path.join(projectPath, 'package.json');
   let packageJsonData = {};
 
-  const packageJsonExists = fs.existsSync(packageJsonPath);
-  if (packageJsonExists) {
-    // If there's a package.json in the template, read & update
+  if (fs.existsSync(packageJsonPath)) {
     packageJsonData = await fs.readJson(packageJsonPath);
   }
 
-  // Merge user inputs
   packageJsonData.name = projectName;
   packageJsonData.version = version;
   packageJsonData.description = description;
   packageJsonData.author = authorName;
-  packageJsonData.license = packageJsonData.license || 'MIT'; // default
+  packageJsonData.license = packageJsonData.license || 'MIT';
   if (!packageJsonData.repository) {
     packageJsonData.repository = {
       type: 'git',
@@ -156,8 +177,6 @@ export async function newProject(initialProjectName) {
     };
   }
 
-  // We'll also ensure "bookpub" is in dependencies
-  // We'll read the version from Bookpub's own package.json
   const bookpubPackageJsonPath = path.join(__dirname, '../../package.json');
   const bookpubPackageJson = fs.readJsonSync(bookpubPackageJsonPath);
   const bookpubVersion = bookpubPackageJson.version || 'latest';
@@ -165,70 +184,75 @@ export async function newProject(initialProjectName) {
   packageJsonData.dependencies = packageJsonData.dependencies || {};
   packageJsonData.dependencies.bookpub = `^${bookpubVersion}`;
 
-  // Write it out
   fs.writeJsonSync(packageJsonPath, packageJsonData, { spaces: 2 });
   console.log(chalk.greenBright('package.json created/updated.\n'));
 
-  // 6. Update or create book.config.yml
+  // 6. Create or update book.config.yml using the new structure
   const bookConfigPath = path.join(projectPath, 'book.config.yml');
-  let bookConfigData = {};
-
-  if (fs.existsSync(bookConfigPath)) {
-    try {
-      const existingConfigStr = fs.readFileSync(bookConfigPath, 'utf8');
-      bookConfigData = yaml.load(existingConfigStr) || {};
-    } catch (err) {
-      console.log(chalk.red(`\nError reading existing book.config.yml: ${err.message}\n`));
-      process.exit(1);
+  
+  // Define the new configuration structure
+  const newBookConfig = {
+    global: {
+      meta: {
+        title: bookTitle,
+        subtitle: subTitle,
+        author: authorName,
+        description: description,
+        // Additional metadata fields can be left blank or added later:
+        'isbn-13': '',
+        'isbn-10': '',
+        publisher: '',
+        date: '',
+        language: '',
+        subject: '',
+        rights: '',
+        version: version,
+        lccn: ''
+      },
+      stages: [
+        {
+          name: 'ejs',
+          meta: {
+            title: 'EJS stage-related title'
+          },
+          config: {
+            entryfile: 'index.md.ejs',
+            rmWhitespace: true
+          }
+        }
+      ]
     }
-  }
+  };
 
-  bookConfigData.meta = bookConfigData.meta || {};
-  bookConfigData.meta.title = bookTitle;
-  bookConfigData.meta.subtitle = subTitle;
-  bookConfigData.meta.author = authorName;
-  bookConfigData.meta.version = version; // if you want to store version in config too
-  bookConfigData.settings = bookConfigData.settings || {};
-  bookConfigData.settings.entryfile = bookConfigData.settings.entryfile || 'index.md.ejs';
-
-  fs.writeFileSync(bookConfigPath, yaml.dump(bookConfigData), 'utf8');
+  // Write the new configuration file
+  fs.writeFileSync(bookConfigPath, yaml.dump(newBookConfig), 'utf8');
   console.log(chalk.green('book.config.yml created/updated.\n'));
 
-  // 7. Append a commented-out pipeline snippet
+  // 7. Append a commented-out pipeline snippet for user customization
   const pipelineSnippet = `
-buildPipelines:
-  html:
-    meta:
-      version: 2.1
-      title: The HTML Title
-  pdf:
-    meta:
-      version: 2.1
-      title: The PDF Title
+## -----------------------
+##  CUSTOM BUILD PIPELINES & OVERRIDES
+## -----------------------
 
-# You can define custom buildPipelines if you want
-# buildPipelines:
-#   pdf-lg:
-#     meta:
-#       title: "My Book (Large Print)"
-#       fontSize: 18
-#     stages:
-#       - name: ejs
-#       - name: markdown
-#       - name: theme
-#       - name: largePrint
-#         config:
-#           lineSpacing: 1.5
+#buildPipelines:
+#  html:
+#    meta:
+#      version: 2.1
+#      title: The HTML Title
 #
-# Or you can override bookpub's core pipelines if you want
-#   pdf:
-#     - name: ejs
-#     - name: markdown
-#     - name: theme
-#
-# Remember to make sure there is a folder in stages/ for any custom stages you create
+#  pdf:
+#    meta:
+#      version: 2.1
+#      title: The PDF Title
+#    stages:
+#      - name: ejs
+#        config:
+#          rmWhitespace: false  # Overrides global setting
+#      - name: markdown
+#      - name: theme
+#      - name: writeHtml
+#      - name: pdf
 `;
-
   fs.appendFileSync(bookConfigPath, pipelineSnippet, 'utf8');
   console.log(chalk.greenBright('Added commented-out pipeline example to book.config.yml.\n'));
 
