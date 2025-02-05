@@ -27,7 +27,7 @@ global:
   stages: # Stage-specific global settings
     - name: ejs
       config:
-        entryfile: index.md.ejs
+        entryfile: inddex.md.ejs
         rmWhitespace: true
 
 ## ~
