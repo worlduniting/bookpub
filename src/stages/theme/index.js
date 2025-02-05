@@ -18,8 +18,8 @@ export async function run(manuscript, { stageConfig }) {
     filter: (src) => !src.endsWith('.scss')
   });
 
-  // Attempt to compile a SCSS named "styles.{buildType}.scss"
-  const scssFile = path.join(themeDir, 'css', `styles.${manuscript.buildType}.scss`);
+  // Attempt to compile a SCSS named "stylesheet.{buildType}.scss"
+  const scssFile = path.join(themeDir, 'css', `stylesheet.${manuscript.buildType}.scss`);
   if (!fs.existsSync(scssFile)) {
     console.log(`No SCSS file for ${manuscript.buildType}. Skipping...`);
     return manuscript;
@@ -29,7 +29,7 @@ export async function run(manuscript, { stageConfig }) {
   try {
     const result = sass.renderSync({ file: scssFile, ...sassOptions });
     fs.writeFileSync(
-      path.join(outputThemeDir, 'css', `styles.${manuscript.buildType}.css`),
+      path.join(outputThemeDir, 'css', `stylesheet.${manuscript.buildType}.css`),
       result.css
     );
     console.log(`Compiled SCSS for ${manuscript.buildType} -> CSS`);

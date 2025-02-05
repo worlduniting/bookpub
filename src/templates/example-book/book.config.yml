@@ -1,12 +1,79 @@
-meta:
-  title: my-book
-  author: 'Yourname GoesHere'
-  description: 'My book is amazing and stuff!'
-  isbn-13: 123456789101
-  isbn-10: 123456789
-  publisher: World Uniting Press
-  date: 2023-05-01T00:00:00.000Z
-  language: en
-  lccn: 123456789
-  subject: Non-fiction
-  rights: All Rights Reserved
+## -----------------------
+##  BOOK PROJECT SETTINGS
+## -----------------------
+
+## ~
+## Global Settings
+##   * Applied to all build pipelines
+## ~
+
+global:
+  meta:
+    title: The Global Title
+    author: Iman Ahthur
+    description: My book is amazing and stuff!
+    isbn-13: 1234567891011
+    isbn-10: 1234567891
+    publisher: Global Settings Press
+    date: 2013-03-31
+    language: en
+    subject: Non-fiction
+    rights: All Rights Reserved
+    copyright: © 2025
+    subtitle: A Global Subtitle
+    version: '1.0'
+    lccn: 1234567891011
+
+  stages: # Stage-specific global settings
+    - name: ejs
+      config:
+        entryfile: index.md.ejs
+        rmWhitespace: true
+
+## ~
+## Build-Pipeline Settings
+##  * Define build-pipelines
+##  * Add build-specific settings
+## ~
+
+buildPipelines:
+  html:
+    stages:
+      - name: ejs
+      - name: markdown
+      - name: theme
+      - name: writeHtml
+    meta:
+      title: The HRML Title # For Example
+
+  pdf:
+    stages:
+      - name: ejs
+      - name: markdown
+      - name: theme
+      - name: pdf
+      - name: writeHtml
+
+  epub:
+    meta:
+    stages:
+      - name: ejs
+      - name: markdown
+      - name: theme
+      - name: pdf
+      - name: writeHtml
+
+# Add your own custom buildPipelines
+# pdf-lg:
+#   meta:
+#     title: "My Book (Large Print)"
+#     fontSize: 18
+#   stages:
+#     - name: ejs
+#       config:
+#         rmWhitespace: false
+#     - name: markdown
+#     - name: theme
+#     - name: largePrint
+#       config:
+#         lineSpacing: 1.5

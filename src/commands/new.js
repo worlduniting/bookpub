@@ -231,7 +231,7 @@ export async function newProject(initialProjectName) {
   // 7. Append a commented-out pipeline snippet for user customization
   const pipelineSnippet = `
 ## -----------------------
-##  CUSTOM BUILD PIPELINES & OVERRIDES
+##  CUSTOM BUILD-PIPELINES & OVERRIDES
 ## -----------------------
 
 #buildPipelines:
