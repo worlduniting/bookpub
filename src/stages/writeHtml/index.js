@@ -45,6 +45,6 @@ export async function run(manuscript, { stageConfig, globalConfig }) {
   // Write the final HTML content to the output file.
   fs.writeFileSync(outputPath, manuscript.content, 'utf8');
 
-  console.log(`Wrote final HTML to: ${outputPath}`);
+  console.log(`Wrote final HTML to: ${path.relative(process.cwd(), outputPath)}`);
   return manuscript;
 }

@@ -1,12 +1,24 @@
 <p align="center">
-  <img src="assets/bookpub-logo.svg" align="right" hspace="30" vspace="30" width="30%" height="30%" alt="BookPub logo header"/>
+  <img src="assets/bookpub-logo.jpg" align="right"  hspace="60" vspace="80" width="30%" height="30%" alt="BookPub logo header"/>
 </p>
 
-# Bookpub
+# bookpub
 
-A forward-thinking book publishing pipeline; a modular CLI that helps you publish books written in **Markdown+EJS** to formats like PDF, EPUB, HTML **or anything else you can think of**!
+A forward-thinking book publishing pipeline; a modular CLI that helps publishers manage one manuscript source, define multiple pipelines for specific formats, to create multiple publishable assets.
 
-BookPub manages a manuscript-to-market toolchain, allowing publishing firms, authors and other stakeholders to manage one markdown-based manuscript source, which can be professionally designed and typeset (even for print) using HTML, CSS and Javascript Web Standards. Bookpub will build your manuscript into any format (PDF, EPUB, MOBI, HTML). BookPub offers:
+Manuscript | Pipeline | Publishable Asset
+
+. written in **Markdown+EJS** into:
+* e-formats like PDF, EPUB, HTML
+* professionally typeset print-ready PDFs
+* **or anything else you can think of**!
+
+BookPub manages a manuscript-to-market toolchain, allowing publishing firms, authors and other stakeholders to manage one markdown-based manuscript source, which can be piped through any conversion stage you can think of.
+
+TERMS:
+
+Manuscript - the source document written in Markdown and EJS
+Buildprofessionally designed and typeset (even for print) using HTML, CSS and Javascript Web Standards. Bookpub will build your manuscript into any format (PDF, EPUB, MOBI, HTML). BookPub offers:
 
 - **Customizable Pipelines**: Stage-based conversions (e.g. EJS → Markdown → HTML → PDF)  
 - **Local Overrides**: Extend or override core stages by dropping your own stage folder  

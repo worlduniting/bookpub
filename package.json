@@ -54,6 +54,8 @@
     "chai": "^4.3.7",
     "chai-fs": "^2.0.0",
     "chokidar": "^4.0.3",
+    "esdoc": "^1.1.0",
+    "esdoc-standard-plugin": "^1.0.0",
     "live-server": "^1.2.2",
     "mocha": "^10.2.0",
     "mock-stdin": "^1.0.0",

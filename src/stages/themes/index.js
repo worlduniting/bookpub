@@ -108,7 +108,8 @@ export async function run(manuscript, { stageConfig }) {
   const outputCssFile = path.join(outputCssDir, `stylesheet.${buildType}.css`);
   fs.writeFileSync(outputCssFile, result.css);
 
-  console.log(`Copied theme "${themeName}" assets (excluding CSS) to: ${outputThemeDir}`);
-  console.log(`Compiled SCSS for build type "${buildType}" to: ${outputCssFile}`);
+  console.log(`Copied theme "${themeName}" assets (excluding CSS) to: ${path.relative(process.cwd(), outputThemeDir)}`);
+  console.log(`Compiled SCSS for build type "${buildType}" to: ${path.relative(process.cwd(), outputCssFile)}`);
+  
   return manuscript;
 }

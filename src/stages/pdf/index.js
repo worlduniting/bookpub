@@ -84,9 +84,9 @@ export async function run(manuscript, { stageConfig, globalConfig }) {
   try {
     console.log(chalk.blue(`\nStarting PDF generation with PrinceXML...`));
     const cmd = `prince-books ${pdfOptions.join(' ')} "${inputHtmlPath}" -o "${outputPdfPath}"`;
-    console.log(chalk.green(`\n> ${cmd}\n`));
+    console.log(chalk.white(`\n> ${cmd}`));
     execSync(cmd, { stdio: 'inherit' });
-    console.log(chalk.green(`\n✅ PDF successfully created at: ${outputPdfPath}\n`));
+    console.log(chalk.green(`\n✅ PDF successfully created at: ${path.relative(process.cwd(), outputPdfPath)}`));
   } catch (err) {
     console.error(chalk.red('Error generating PDF with PrinceXML:'), err);
     throw err;
