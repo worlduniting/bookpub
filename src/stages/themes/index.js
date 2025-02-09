@@ -22,13 +22,13 @@ import sass from 'sass';
  *
  * All assets in the selected theme folder (located at `/manuscript/themes/[theme]/`)
  * are copied to the build output folder (`build/<buildType>/themes/`), except the entire
- * "css" folder. Instead, only the stylesheet for the current build type is processed:
+ * "css" folder. Instead, only the styles for the current build type are processed:
  *
  * - The source SCSS file is expected at: 
- *     /manuscript/themes/[theme]/css/stylesheet.<buildType>.scss
+ *     /manuscript/themes/[theme]/css/styles.<buildType>.scss
  * - This file is compiled to CSS using Sass.
  * - The resulting CSS file is written as:
- *     /build/<buildType>/themes/css/stylesheet.<buildType>.css
+ *     /build/<buildType>/themes/css/styles.<buildType>.css
  * - No other files from the theme’s css folder are copied.
  *
  * @param {Object} manuscript - The manuscript object containing:
@@ -41,7 +41,7 @@ import sass from 'sass';
  * @returns {Promise<Object>} Returns the updated manuscript object.
  *
  * @throws Will throw an error if the selected theme does not exist or if the required
- *         stylesheet file for the current build type is not found.
+ *         styles file for the current build type is not found.
  *
  * @example
  * // Example configuration in book.config.yml:
@@ -88,9 +88,9 @@ export async function run(manuscript, { stageConfig }) {
 
   // Process the CSS folder separately.
   // Define the path to the source SCSS file for the current build type.
-  const sourceCssFile = path.join(themeSourceDir, 'css', `stylesheet.${buildType}.scss`);
+  const sourceCssFile = path.join(themeSourceDir, 'css', `styles.${buildType}.scss`);
   if (!fs.existsSync(sourceCssFile)) {
-    throw new Error(`The stylesheet for build type "${buildType}" does not exist at ${sourceCssFile}.`);
+    throw new Error(`The CSS styles file for build type "${buildType}" does not exist at ${sourceCssFile}.`);
   }
 
   // Compile the SCSS file using Sass.
@@ -105,7 +105,7 @@ export async function run(manuscript, { stageConfig }) {
   const outputCssDir = path.join(outputThemeDir, 'css');
   fse.ensureDirSync(outputCssDir);
   // Define the output CSS file name.
-  const outputCssFile = path.join(outputCssDir, `stylesheet.${buildType}.css`);
+  const outputCssFile = path.join(outputCssDir, `styles.${buildType}.css`);
   fs.writeFileSync(outputCssFile, result.css);
 
   console.log(`Copied theme "${themeName}" assets (excluding CSS) to: ${path.relative(process.cwd(), outputThemeDir)}`);
