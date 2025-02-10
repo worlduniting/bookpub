@@ -44,7 +44,7 @@ buildPipelines:
       - name: theme
       - name: writeHtml
     meta:
-      title: The HRML Title # For Example
+      title: The HRML Title # For Example 
 
   pdf:
     stages:
