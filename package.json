@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "start": "node bin/bookpub.js",
-    "test": "mocha"
+    "test:unit": "vitest",
+    "test:features": "cucumber-js --require tests/steps/**/*.js tests/features/**/*.feature"
   },
   "bin": {
     "bookpub": "./bin/bookpub.js",
@@ -50,16 +51,25 @@
     "sass": "^1.57.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.26.8",
+    "@babel/preset-env": "^7.26.8",
+    "@cucumber/cucumber": "^11.2.0",
+    "babel-jest": "^29.7.0",
     "browser-sync": "^3.0.3",
     "chai": "^4.3.7",
     "chai-fs": "^2.0.0",
+    "cheerio": "^1.0.0",
     "chokidar": "^4.0.3",
     "esdoc": "^1.1.0",
     "esdoc-standard-plugin": "^1.0.0",
+    "execa": "^9.5.2",
+    "jest": "^29.7.0",
     "live-server": "^1.2.2",
     "mocha": "^10.2.0",
     "mock-stdin": "^1.0.0",
-    "open": "^10.1.0"
+    "open": "^10.1.0",
+    "puppeteer": "^24.2.0",
+    "vitest": "^3.0.5"
   },
   "files": [
     "bin",

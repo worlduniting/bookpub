@@ -219,6 +219,12 @@ export async function newProject(initialProjectName) {
             entryfile: 'index.md.ejs',
             rmWhitespace: true
           }
+        },
+        {
+          name: 'markdown',
+          config: {
+            pandocPath: 'pandoc'
+          }
         }
       ]
     }
@@ -230,28 +236,53 @@ export async function newProject(initialProjectName) {
 
   // 7. Append a commented-out pipeline snippet for user customization
   const pipelineSnippet = `
-## -----------------------
+## -----------------------~~~~~~~~~~~~~~~
 ##  CUSTOM BUILD-PIPELINES & OVERRIDES
-## -----------------------
+##    * Define build-piplines
+##    * Add build-specific settings
+## -----------------------~~~~~~~~~~~~~~~~
 
-#buildPipelines:
-#  html:
-#    meta:
-#      version: 2.1
-#      title: The HTML Title
-#
-#  pdf:
-#    meta:
-#      version: 2.1
-#      title: The PDF Title
-#    stages:
-#      - name: ejs
-#        config:
-#          rmWhitespace: false  # Overrides global setting
-#      - name: markdown
-#      - name: theme
-#      - name: writeHtml
-#      - name: pdf
+buildPipelines:
+  html:
+    stages:
+      - name: ejs
+      - name: markdown
+      - name: themes
+      - name: writeHtml
+    meta:
+      title: The HTML Title # For Example
+
+  pdf:
+    stages:
+      - name: ejs
+      - name: markdown
+      - name: themes
+      - name: pdf
+      - name: writeHtml
+
+  epub:
+    meta:
+    stages:
+      - name: ejs
+      - name: markdown
+      - name: themes
+      - name: pdf
+      - name: writeHtml
+
+# Add your own custom buildPipelines
+# pdf-lg:
+#   meta:
+#     title: "My Book (Large Print)"
+#     fontSize: 18
+#   stages:
+#     - name: ejs
+#       config:
+#         rmWhitespace: false
+#     - name: markdown
+#     - name: themes
+#     - name: largePrint
+#       config:
+#         lineSpacing: 1.5
 `;
   fs.appendFileSync(bookConfigPath, pipelineSnippet, 'utf8');
   console.log(chalk.greenBright('Added commented-out pipeline example to book.config.yml.\n'));

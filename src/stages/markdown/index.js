@@ -47,7 +47,12 @@ export async function run(manuscript, { stageConfig }) {
   ) {
     throw new Error(
       "Pandoc path is required in stage configuration for the markdown stage. " +
-      "Please provide it under stageConfig.config.pandocPath."
+      `Please provide it under stages (markdown):
+      stages:
+        - name: markdown
+          config:
+            pandocPath: pandocPath
+      `
     );
   }
   const pandocPath = stageConfig.config.pandocPath;
