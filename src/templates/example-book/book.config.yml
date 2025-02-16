@@ -23,10 +23,48 @@ global:
     subtitle: A Global Subtitle
     version: '1.0'
     lccn: 1234567891011
-
-## Stage-specific global settings
-  stages:
+  stages: # Stage-specific global settings
     - name: ejs
       config:
-        entryfile: inddex.md.ejs
+        entryfile: index.md.ejs
         rmWhitespace: true
+    - name: markdown
+      config:
+        pandocPath: pandoc
+
+## -----------------------~~~~~~~~~~~~~~~
+##  CUSTOM BUILD-PIPELINES & OVERRIDES
+##    * Define build-piplines
+##    * Add build-specific settings
+## -----------------------~~~~~~~~~~~~~~~~
+
+buildPipelines:
+  html:
+    stages:
+      - name: ejs
+      - name: markdown
+      - name: themes
+      - name: writeHtml
+
+  pdf:
+    stages:
+      - name: ejs
+      - name: markdown
+      - name: themes
+      - name: writeHtml
+      - name: pdf
+
+# Add your own custom buildPipelines
+# pdf-lg:
+#   meta:
+#     title: "My Book (Large Print)"
+#     fontSize: 18
+#   stages:
+#     - name: ejs
+#       config:
+#         rmWhitespace: false
+#     - name: markdown
+#     - name: themes
+#     - name: largePrint
+#       config:
+#         lineSpacing: 1.5

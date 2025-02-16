@@ -1,105 +1,73 @@
-/**
- * @module newProject
- * @description
- * This module provides functionality for scaffolding a new Bookpub project.
- * It prompts the user for project and book details, copies a template (either the default or a custom git-cloned one),
- * updates/creates the project's package.json, and writes a new book.config.yml file.
- *
- * The generated book.config.yml now follows a new structure:
- *
- *   global:
- *     meta:
- *       // Global metadata applied to all build pipelines
- *     stages:
- *       // Default stage-specific settings applied in all pipelines
- *
- *   #buildPipelines:
- *   #  html:
- *   #    meta:
- *   #      version: 2.1
- *   #      title: The HTML Title
- *   #
- *   #  pdf:
- *   #    meta:
- *   #      version: 2.1
- *   #      title: The PDF Title
- *   #    stages:
- *   #      - name: ejs
- *   #        config:
- *   #          rmWhitespace: false  # Overrides global setting
- *   #      - name: markdown
- *   #      - name: theme
- *   #      - name: writeHtml
- *   #      - name: pdf
- *
- * @example
- * // To create a new Bookpub project:
- * bookpub new my-book
- */
-
 import inquirer from 'inquirer';
 import chalk from 'chalk';
 import path from 'path';
 import fs from 'fs-extra';
-import yaml from 'js-yaml';
 import { fileURLToPath } from 'url';
 import { spawnSync } from 'child_process';
+import YAML from 'yaml';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 /**
- * Prompts the user and creates a new Bookpub project.
+ * @module newProject
+ * @description
+ * Scaffolds a new Bookpub project. This command prompts the user for basic project and book details,
+ * then copies a complete example template—including a fully commented `book.config.yml`—into a new project folder.
+ * The new project’s `book.config.yml` is loaded and updated with the user-specified values (e.g. book title,
+ * author, subtitle, version) while preserving all comments and other configuration settings.
  *
- * @async
- * @function newProject
  * @param {string} initialProjectName - The default project name.
+ *
+ * @example
+ * // Create a new project named "my-book":
+ * bookpub new my-book
  */
 export async function newProject(initialProjectName) {
-  // 1. Prompt the user for project details
+  // 1. Prompt the user for input
   const answers = await inquirer.prompt([
     {
       type: 'input',
       name: 'projectName',
       message: 'Project Name?',
-      default: initialProjectName
+      default: initialProjectName,
     },
     {
       type: 'input',
       name: 'bookTitle',
       message: 'Book Title?',
-      default: 'Title'
+      default: 'Title',
     },
     {
       type: 'input',
       name: 'subTitle',
       message: 'Book Subtitle?',
-      default: 'Subtitle'
+      default: 'Subtitle',
     },
     {
       type: 'input',
       name: 'authorName',
       message: "Author's Name?",
-      default: 'My Name'
+      default: 'My Name',
     },
     {
       type: 'input',
       name: 'description',
       message: 'Description?',
-      default: 'My great description'
+      default: 'My great description',
     },
     {
       type: 'input',
       name: 'version',
       message: 'Version/Edition?',
-      default: '1.0'
+      default: '1.0',
     },
     {
       type: 'input',
       name: 'bookTemplateGitUrl',
       message: 'Custom book template URL (optional)? (git clone URL)',
-      default: ''
-    }
+      default: '',
+    },
   ]);
 
   const projectName = answers.projectName;
@@ -112,28 +80,23 @@ export async function newProject(initialProjectName) {
 
   // 2. Prepare the path for the new project
   const projectPath = path.resolve(process.cwd(), projectName);
-
   if (fs.existsSync(projectPath)) {
     console.log(chalk.red(`\nA folder named "${projectName}" already exists. Aborting.\n`));
     process.exit(1);
   }
   fs.ensureDirSync(projectPath);
-
   console.log(chalk.greenBright(`\nCreating new Bookpub project: "${projectName}"\n`));
 
-  // 3. Decide on the template source
+  // 3. Decide on the source of our template
   let templateSource;
   let clonedTempPath = '';
-
   if (templateGitUrl) {
     console.log(chalk.blue(`Cloning book template from: ${templateGitUrl}`));
     clonedTempPath = path.join(__dirname, '../../temp-clone');
     fs.removeSync(clonedTempPath);
-
     const cloneResult = spawnSync('git', ['clone', templateGitUrl, clonedTempPath], {
-      stdio: 'inherit'
+      stdio: 'inherit',
     });
-
     if (cloneResult.status !== 0) {
       console.log(chalk.red('\nFailed to clone the Git repository. Aborting.\n'));
       process.exit(cloneResult.status || 1);
@@ -141,30 +104,28 @@ export async function newProject(initialProjectName) {
     console.log(chalk.green('Git clone successful.\n'));
     templateSource = clonedTempPath;
   } else {
+    // Use the built-in example-book template
     templateSource = path.join(__dirname, '../templates/example-book');
     console.log(chalk.green('Installing default example-book template...\n'));
   }
 
-  // 4. Copy the template into the project folder
+  // 4. Copy the template to the project folder
   try {
     await fs.copy(templateSource, projectPath);
   } catch (err) {
     console.log(chalk.red(`\nError copying template: ${err.message}\n`));
     process.exit(1);
   }
-
   if (clonedTempPath && fs.existsSync(clonedTempPath)) {
     fs.removeSync(clonedTempPath);
   }
 
-  // 5. Update package.json with user inputs
+  // 5. Update package.json
   const packageJsonPath = path.join(projectPath, 'package.json');
   let packageJsonData = {};
-
   if (fs.existsSync(packageJsonPath)) {
     packageJsonData = await fs.readJson(packageJsonPath);
   }
-
   packageJsonData.name = projectName;
   packageJsonData.version = version;
   packageJsonData.description = description;
@@ -173,113 +134,48 @@ export async function newProject(initialProjectName) {
   if (!packageJsonData.repository) {
     packageJsonData.repository = {
       type: 'git',
-      url: ''
+      url: '',
     };
   }
-
   const bookpubPackageJsonPath = path.join(__dirname, '../../package.json');
   const bookpubPackageJson = fs.readJsonSync(bookpubPackageJsonPath);
   const bookpubVersion = bookpubPackageJson.version || 'latest';
-
   packageJsonData.dependencies = packageJsonData.dependencies || {};
   packageJsonData.dependencies.bookpub = `^${bookpubVersion}`;
-
   fs.writeJsonSync(packageJsonPath, packageJsonData, { spaces: 2 });
   console.log(chalk.greenBright('package.json created/updated.\n'));
 
-  // 6. Create or update book.config.yml using the new structure
+  // 6. Update or create book.config.yml preserving comments.
+  // Use the default config file from the template.
   const bookConfigPath = path.join(projectPath, 'book.config.yml');
-  
-  // Define the new configuration structure
-  const newBookConfig = {
-    global: {
-      meta: {
-        title: bookTitle,
-        subtitle: subTitle,
-        author: authorName,
-        description: description,
-        // Additional metadata fields can be left blank or added later:
-        'isbn-13': '',
-        'isbn-10': '',
-        publisher: '',
-        date: '',
-        language: '',
-        subject: '',
-        rights: '',
-        version: version,
-        lccn: ''
-      },
-      stages: [
-        {
-          name: 'ejs',
-          meta: {
-            title: 'EJS stage-related title'
-          },
-          config: {
-            entryfile: 'index.md.ejs',
-            rmWhitespace: true
-          }
-        },
-        {
-          name: 'markdown',
-          config: {
-            pandocPath: 'pandoc'
-          }
-        }
-      ]
-    }
-  };
+  let configText = fs.readFileSync(path.join(__dirname, '../templates/example-book/book.config.yml'), 'utf8');
 
-  // Write the new configuration file
-  fs.writeFileSync(bookConfigPath, yaml.dump(newBookConfig), 'utf8');
+  // Parse the configuration using the "yaml" library to preserve comments.
+  const doc = YAML.parseDocument(configText);
+
+  // Update the global.meta section with user input.
+  const globalNode = doc.get('global');
+  if (!globalNode) {
+    throw new Error('Invalid configuration: missing "global" key.');
+  }
+  const metaNode = globalNode.get('meta');
+  if (!metaNode) {
+    throw new Error('Invalid configuration: missing "global.meta" key.');
+  }
+  metaNode.set('title', bookTitle);
+  metaNode.set('author', authorName);
+  metaNode.set('description', description);
+  metaNode.set('version', version);
+  metaNode.set('subtitle', subTitle);
+
+  // Write the updated configuration back, preserving comments.
+  fs.writeFileSync(bookConfigPath, doc.toString(), 'utf8');
   console.log(chalk.green('book.config.yml created/updated.\n'));
 
-  // 7. Append a commented-out pipeline snippet for user customization
-  const pipelineSnippet = `
-## -----------------------~~~~~~~~~~~~~~~
-##  CUSTOM BUILD-PIPELINES & OVERRIDES
-##    * Define build-piplines
-##    * Add build-specific settings
-## -----------------------~~~~~~~~~~~~~~~~
-
-buildPipelines:
-  html:
-    stages:
-      - name: ejs
-      - name: markdown
-      - name: themes
-      - name: writeHtml
-
-  pdf:
-    stages:
-      - name: ejs
-      - name: markdown
-      - name: themes
-      - name: writeHtml
-      - name: pdf
-
-# Add your own custom buildPipelines
-# pdf-lg:
-#   meta:
-#     title: "My Book (Large Print)"
-#     fontSize: 18
-#   stages:
-#     - name: ejs
-#       config:
-#         rmWhitespace: false
-#     - name: markdown
-#     - name: themes
-#     - name: largePrint
-#       config:
-#         lineSpacing: 1.5
-`;
-  fs.appendFileSync(bookConfigPath, pipelineSnippet, 'utf8');
-  console.log(chalk.greenBright('Added commented-out pipeline example to book.config.yml.\n'));
-
-  // 8. Wrap-up
+  // 7. Wrap-up message.
   console.log(chalk.cyanBright(`All done! Next steps:`));
   console.log(chalk.cyanBright(`  1. cd ${projectName}`));
   console.log(chalk.cyanBright(`  2. git init && npm install`));
-  console.log(chalk.cyanBright(`  3. bookpub build pdf`));
+  console.log(chalk.cyanBright(`  3. bookpub build html`));
   console.log(chalk.cyanBright(`\nHappy Writing!\n`));
 }
