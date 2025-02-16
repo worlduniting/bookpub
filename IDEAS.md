@@ -1,1 +1,0 @@
-* 'bookpub build all' - will iterate through book.config.yml buildPipelines and build each in succession
