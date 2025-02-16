@@ -1,7 +1,7 @@
 {
   "name": "bookpub",
   "version": "1.0.0",
-  "description": "An advanced book typesetting and publishing framework for publishing houses. Bookpub manages a manuscript-to-market toolchain allowing publishing firms and their authors to track one markdown-based manuscript source which can be built into any format, and can be professionally typeset for print with HTML, CSS and Javascript.",
+  "description": "A lightweight book publishing framework cli providing customizable pipelines with stages that can be stacked like legos to create any type/number of publishable assets you need from only one manuscript source, from basic html to buetifully type-set, print-house-ready books.",
   "main": "index.js",
   "type": "module",
   "scripts": {

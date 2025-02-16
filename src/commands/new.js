@@ -249,25 +249,14 @@ buildPipelines:
       - name: markdown
       - name: themes
       - name: writeHtml
-    meta:
-      title: The HTML Title # For Example
 
   pdf:
     stages:
       - name: ejs
       - name: markdown
       - name: themes
-      - name: pdf
       - name: writeHtml
-
-  epub:
-    meta:
-    stages:
-      - name: ejs
-      - name: markdown
-      - name: themes
       - name: pdf
-      - name: writeHtml
 
 # Add your own custom buildPipelines
 # pdf-lg:
