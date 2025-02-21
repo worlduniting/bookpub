@@ -1,5 +1,5 @@
 <p>
-  <img src="assets/bookpub-logo.jpg" align="right"  hspace="60" vspace="80" width="30%" height="30%" alt="BookPub logo header"/>
+  <img src="assets/logo-mid.svg" align="right"  hspace="60" vspace="80" width="30%" height="30%" alt="BookPub logo header"/>
 </p>
 
 # bookpub
