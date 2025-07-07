@@ -4,148 +4,174 @@ import { spawn } from "child_process";
 import chokidar from "chokidar";
 import browserSync from "browser-sync";
 import open from "open";
+import express from "express";
+import { WebSocketServer } from "ws";
+import { fileURLToPath } from "url";
+import { copyFile } from "fs/promises";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Delay (ms) to debounce rebuilds after file changes
+const DEBOUNCE_MS = 5000;
 
 /**
- * @module dev
- * @description
- * Runs Bookpub in development mode with live reloading. Depending on the build type:
+ * Run `bookpub build <type>` and return a promise.
+ * @param {string} type
+ * @returns {Promise<void>}
+ */
+function runBuild(type) {
+  return new Promise((resolve, reject) => {
+    const proc = spawn("bookpub", ["build", type], { stdio: "inherit" });
+    proc.on("close", (code) => {
+      code === 0
+        ? resolve()
+        : reject(new Error(`Build failed with code ${code}`));
+    });
+  });
+}
+
+/**
+ * Copy dev/preview.html into the build output directory
+ * @param {string} outputDir
+ */
+async function copyPreview(outputDir) {
+  const src = path.join(process.cwd(), "dev", "preview.html");
+  const dest = path.join(outputDir, "preview.html");
+  try {
+    await copyFile(src, dest);
+    console.log(chalk.green("Copied preview.html to output directory."));
+  } catch (err) {
+    console.error(chalk.red("Failed to copy preview.html:"), err);
+  }
+}
+
+/**
+ * Development mode: serves and live-reloads build outputs.
+ * - For PDF builds: copies preview.html into build/pdf/, serves build/pdf/ with Express+WebSocket,
+ *   and reloads the iframe in-place without losing scroll position.
+ * - For other builds: serves build/<type>/ via BrowserSync and reloads on changes.
  *
- * - For build types other than "pdf": A BrowserSync server is started to serve the build output,
- *   and the default web browser opens the served URL (http://localhost:3000).
- *
- * - For the "pdf" build type: Instead of serving an HTML file, the generated PDF (book.pdf)
- *   in the build output is opened directly in the default PDF viewer or browser.
- *
- * In both cases, file watchers are set up to monitor changes in the manuscript and book.config.yml.
- * When changes are detected, Bookpub rebuilds the output and reloads the view (or reopens the PDF).
- *
- * @param {string} buildType - The build type to run in development mode (e.g., "html" or "pdf").
- *
- * @example
- * // Run development mode for HTML:
- * bookpub dev html
- *
- * // Run development mode for PDF:
- * bookpub dev pdf
+ * @param {string} buildType
  */
 export async function dev(buildType) {
   if (!buildType) {
-    console.log(
+    console.error(
       chalk.red("Please specify a build type. Example: bookpub dev html")
     );
     process.exit(1);
   }
 
-  const buildCommand = ["build", buildType];
-  const buildDir = path.join(process.cwd(), "build", buildType);
-  const servePath = buildDir;
+  const outputDir = path.join(process.cwd(), "build", buildType);
+  const isPdf = buildType === "pdf" || buildType === "portfolio";
 
   console.log(chalk.blue(`Running initial build for "${buildType}"...`));
-  const buildProcess = spawn("bookpub", buildCommand, { stdio: "inherit" });
+  try {
+    await runBuild(buildType);
+  } catch (err) {
+    console.error(chalk.red(err.message));
+    process.exit(1);
+  }
 
-  buildProcess.on("close", (code) => {
-    if (code !== 0) {
-      console.log(chalk.red(`Build process exited with code ${code}.`));
-      process.exit(code);
-    } else {
-      if (buildType === "pdf") {
-        // For PDF builds, open the generated PDF file directly.
-        const pdfFile = path.join(servePath, "book.pdf");
-        console.log(chalk.green(`Opening PDF: ${pdfFile}`));
-        open(pdfFile).catch((err) => {
-          console.log(chalk.red("Failed to open PDF:", err));
-        });
-        // Set up a file watcher to rebuild on changes.
-        setTimeout(() => {
-          const watchPaths = [
-            path.join(process.cwd(), "manuscript"),
-            path.join(process.cwd(), "book.config.yml"),
-          ];
-          const watcher = chokidar.watch(watchPaths, {
-            ignored: /(^|[\/\\])\../,
-            persistent: true,
-            ignoreInitial: true,
+  if (isPdf) {
+    // Copy preview.html into build/pdf/
+    await copyPreview(outputDir);
+
+    const port = 3000;
+    const app = express();
+    // Serve build/<type>/ as the web root
+    app.use(express.static(outputDir));
+
+    const server = app.listen(port, () => {
+      console.log(
+        chalk.green(
+          `PDF preview available at http://localhost:${port}/preview.html`
+        )
+      );
+      open(`http://localhost:${port}/preview.html`).catch((e) =>
+        console.error(chalk.red(e))
+      );
+    });
+    const wss = new WebSocketServer({ server });
+
+    // Watch manuscript, config, and preview template
+    const watchPaths = [
+      path.join(process.cwd(), "manuscript"),
+      path.join(process.cwd(), "book.config.yml"),
+      path.join(process.cwd(), "dev", "preview.html"),
+    ];
+    const watcher = chokidar.watch(watchPaths, {
+      ignored: /(^|[\/\\])\../,
+      ignoreInitial: true,
+      persistent: true,
+    });
+
+    let rebuildTimer;
+    watcher.on("all", (event, changedPath) => {
+      console.log(chalk.yellow(`Change detected (${event}) at ${changedPath}. Scheduling rebuild in ${DEBOUNCE_MS}ms...`));
+      clearTimeout(rebuildTimer);
+      rebuildTimer = setTimeout(async () => {
+        console.log(chalk.yellow("Debounced rebuild starting..."));
+        try {
+          await runBuild(buildType);
+          await copyPreview(outputDir);
+          console.log(chalk.green("PDF rebuild complete, notifying preview..."));
+          wss.clients.forEach((client) => {
+            if (client.readyState === 1) client.send("reload");
           });
-          const rebuild = () => {
-            console.log(chalk.yellow("Changes detected. Rebuilding PDF..."));
-            const rebuildProcess = spawn("bookpub", buildCommand, {
-              stdio: "inherit",
-            });
-            rebuildProcess.on("close", (code) => {
-              if (code !== 0) {
-                console.log(
-                  chalk.red(`Rebuild process exited with code ${code}.`)
-                );
-              } else {
-                console.log(
-                  chalk.green("Rebuild complete. Opening updated PDF...")
-                );
-                open(pdfFile).catch((err) => {
-                  console.log(chalk.red("Failed to open PDF:", err));
-                });
-              }
-            });
-          };
-          watcher.on("change", rebuild);
-          watcher.on("add", rebuild);
-          watcher.on("unlink", rebuild);
-          console.log(
-            chalk.blue("Watching for changes in manuscript and book.config.yml...")
-          );
-        }, 500);
-      } else {
-        // For non-PDF build types, serve using BrowserSync.
-        const bs = browserSync.create();
-        bs.init(
-          {
-            server: servePath,
-            port: 3000,
-            open: false,
-            notify: false,
-          },
-          () => {
-            console.log(
-              chalk.green(`Serving "${buildType}" at http://localhost:3000`)
-            );
-            open("http://localhost:3000").catch((err) => {
-              console.log(chalk.red("Failed to open browser:", err));
-            });
-          }
+        } catch (e) {
+          console.error(chalk.red(`Rebuild error: ${e.message}`));
+        }
+      }, DEBOUNCE_MS);
+    });
+
+    console.log(chalk.blue("Watching for PDF & preview.html changes..."));
+  } else {
+    // BrowserSync server for other build types
+    const bs = browserSync.create();
+    bs.init(
+      {
+        server: outputDir,
+        port: 3000,
+        open: false,
+        notify: false,
+      },
+      () => {
+        console.log(
+          chalk.green(`Serving "${buildType}" at http://localhost:3000`)
         );
-        setTimeout(() => {
-          const watchPaths = [
-            path.join(process.cwd(), "manuscript"),
-            path.join(process.cwd(), "book.config.yml"),
-          ];
-          const watcher = chokidar.watch(watchPaths, {
-            ignored: /(^|[\/\\])\../,
-            persistent: true,
-            ignoreInitial: true,
-          });
-          const rebuild = () => {
-            console.log(chalk.yellow("Changes detected. Rebuilding..."));
-            const rebuildProcess = spawn("bookpub", buildCommand, {
-              stdio: "inherit",
-            });
-            rebuildProcess.on("close", (code) => {
-              if (code !== 0) {
-                console.log(
-                  chalk.red(`Rebuild process exited with code ${code}.`)
-                );
-              } else {
-                console.log(chalk.green("Rebuild complete. Reloading browser..."));
-                bs.reload();
-              }
-            });
-          };
-          watcher.on("change", rebuild);
-          watcher.on("add", rebuild);
-          watcher.on("unlink", rebuild);
-          console.log(
-            chalk.blue("Watching for changes in manuscript and book.config.yml...")
-          );
-        }, 500);
+        open(`http://localhost:3000`).catch((e) =>
+          console.error(chalk.red(e))
+        );
       }
-    }
-  });
+    );
+
+    const watchPaths = [
+      path.join(process.cwd(), "manuscript"),
+      path.join(process.cwd(), "book.config.yml"),
+    ];
+    const watcher = chokidar.watch(watchPaths, {
+      ignored: /(^|[\/\\])\../,
+      ignoreInitial: true,
+      persistent: true,
+    });
+
+    let rebuildTimer;
+    watcher.on("all", (event, changedPath) => {
+      console.log(chalk.yellow(`Change detected (${event}) at ${changedPath}. Scheduling rebuild in ${DEBOUNCE_MS}ms...`));
+      clearTimeout(rebuildTimer);
+      rebuildTimer = setTimeout(async () => {
+        console.log(chalk.yellow("Debounced rebuild starting..."));
+        try {
+          await runBuild(buildType);
+          console.log(chalk.green("Rebuild complete, reloading browser..."));
+          bs.reload();
+        } catch (e) {
+          console.error(chalk.red(`Rebuild error: ${e.message}`));
+        }
+      }, DEBOUNCE_MS);
+    });
+
+    console.log(chalk.blue("Watching for source changes..."));
+  }
 }

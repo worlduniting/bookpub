@@ -31,5 +31,6 @@
     "mochaExplorer.ui": "bdd",
     "code-runner.executorMap": {
         "html": "open -a 'Google Chrome' $fullFileName"
-    }
+    },
+    "files.autoSave": "afterDelay"
 }
