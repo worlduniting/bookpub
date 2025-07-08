@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>BookPub Live Preview</title>
+  <style>
+    body,html { margin: 0; height: 100%; }
+    iframe { width: 100%; height: 100%; border: none; }
+  </style>
+</head>
+<body>
+  <iframe id="pdfFrame" src="/pdf/book.pdf"></iframe>
+  <script>
+    const iframe = document.getElementById("pdfFrame");
+    const ws     = new WebSocket(`ws://${location.host}`);
+    let pos = { x: 0, y: 0 };
+
+    // Attach once the iframe's document is ready
+    function watchScroll() {
+      try {
+        const win = iframe.contentWindow;
+        win.addEventListener("scroll", () => {
+          pos.x = win.scrollX;
+          pos.y = win.scrollY;
+        }, true);
+      } catch (e) { /* might throw until viewer loads */ }
+    }
+
+    // When a reload signal comes in, re-set src with cache-bust
+    ws.onmessage = ({ data }) => {
+      if (data !== "reload") return;
+      // Grab scroll first (in case user scrolled just before)
+      try {
+        const win = iframe.contentWindow;
+        pos.x = win.scrollX;
+        pos.y = win.scrollY;
+      } catch (e) {}
+      // Reload PDF
+      iframe.src = `/pdf/book.pdf?t=${Date.now()}`;
+    };
+
+    // When the iframe finishes loading, restore scroll and re-watch
+    iframe.onload = () => {
+      try {
+        iframe.contentWindow.scrollTo(pos.x, pos.y);
+      } catch (e) {}
+      watchScroll();
+    };
+
+    // Initial watch (once the first PDF is loaded)
+    watchScroll();
+  </script>
+</body>
+</html>
