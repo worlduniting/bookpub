@@ -4,7 +4,7 @@
 
 ### A CIVIL HUMAN Ethic
 
-As a community of people desiring to work together in a peaceful and respectful manner, we agree to abide by the [CIVIL HUMAN Ethic](https://worlduniting.org/a-civil-human-ethic).
+As a community of people desiring to work together in a peaceful and respectful manner, we agree to abide by a [CIVIL HUMAN Ethic](https://worlduniting.org/a-civil-human-ethic).
 
 **H.U.M.A.N. Conduct**
 

@@ -1,16 +1,17 @@
 {
   "name": "bookpub",
-  "version": "0.3.5",
-  "description": "An advanced book typesetting and publishing framework for publishing houses. Bookpub manages a manuscript-to-market toolchain allowing publishing firms and their authors to track one markdown-based manuscript source which can be built into any format, and can be professionally typeset for print with HTML, CSS and Javascript.",
+  "version": "1.0.0",
+  "description": "A lightweight book publishing framework cli providing customizable pipelines with stages that can be stacked like legos to create any type/number of publishable assets you need from only one manuscript source, from basic html to buetifully type-set, print-house-ready books.",
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "mocha --require esm --extension js --recursive test",
-    "test:clean": "rimraf build/* test/build/* test/archives/*",
-    "package-release": "node ./lib/package-release.js"
+    "start": "node bin/bookpub.js",
+    "test:unit": "vitest",
+    "test:features": "cucumber-js --require tests/steps/**/*.js tests/features/**/*.feature"
   },
   "bin": {
-    "bookpub": "./cli.js"
+    "bookpub": "./bin/bookpub.js",
+    "create-bookpub-project": "./bin/create-bookpub-project.js"
   },
   "repository": {
     "type": "git",
@@ -42,32 +43,44 @@
   "homepage": "https://github.com/worlduniting/bookpub#readme",
   "dependencies": {
     "chalk": "^5.2.0",
-    "commander": "^10.0.0",
-    "ejs": "^3.1.9",
-    "ejs-lint": "^2.0.0",
+    "commander": "^10.0.1",
+    "ejs": "^3.1.8",
+    "express": "^5.1.0",
     "fs-extra": "^11.1.1",
-    "inquirer": "^9.1.5",
-    "install": "^0.13.0",
+    "inquirer": "^9.2.3",
     "js-yaml": "^4.1.0",
-    "moment": "^2.29.4",
-    "nodemon": "^2.0.22",
-    "npm": "^9.6.2",
-    "remark-gfm": "^3.0.1",
-    "remark-html": "^15.0.2",
-    "remark-parse": "^10.0.1",
-    "sass": "^1.60.0",
-    "smartypants": "^0.1.6",
-    "tar": "^6.1.14",
-    "unified": "^10.1.2",
-    "webpack": "^5.76.3",
-    "webpack-cli": "^5.0.1",
-    "webpack-dev-server": "^4.13.1"
+    "sass": "^1.57.0",
+    "ws": "^8.18.3",
+    "yaml": "^2.8.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.26.8",
+    "@babel/preset-env": "^7.26.8",
+    "@cucumber/cucumber": "^11.2.0",
+    "babel-jest": "^29.7.0",
+    "browser-sync": "^3.0.3",
     "chai": "^4.3.7",
-    "esm": "^3.2.25",
-    "execa": "^7.1.1",
-    "mocha": "^10.2.0"
+    "chai-fs": "^2.0.0",
+    "cheerio": "^1.0.0",
+    "chokidar": "^4.0.3",
+    "esdoc": "^1.1.0",
+    "esdoc-standard-plugin": "^1.0.0",
+    "execa": "^9.5.2",
+    "jest": "^29.7.0",
+    "live-server": "^1.2.2",
+    "mocha": "^10.2.0",
+    "mock-stdin": "^1.0.0",
+    "open": "^10.1.0",
+    "puppeteer": "^24.2.0",
+    "vitest": "^3.0.5"
   },
-  "status": "ALPHA"
+  "files": [
+    "bin",
+    "src",
+    "test"
+  ],
+  "engine": {
+    "node": ">=14.0.0"
+  },
+  "status": "BETA"
 }

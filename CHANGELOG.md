@@ -87,7 +87,7 @@
     * current structure is:
     
     ```markdown
-    theme/
+    themes/
     |--BOOM!-README    // README describing theme
     |--css/styles.css  // Main Stylesheet
     |--fonts/          // Additional Fonts
