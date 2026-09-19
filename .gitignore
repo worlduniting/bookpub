@@ -6,3 +6,7 @@ node_modules
 
 # Ignore esdocs folder
 docs
+
+# Generated books and retained EPUB diagnostics
+build/
+.bookpub/

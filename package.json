@@ -7,6 +7,7 @@
   "scripts": {
     "start": "node bin/bookpub.js",
     "test:unit": "vitest",
+    "test:epub": "node --test test/epub.integration.js",
     "test:features": "cucumber-js --require tests/steps/**/*.js tests/features/**/*.feature"
   },
   "bin": {
@@ -42,10 +43,14 @@
   },
   "homepage": "https://github.com/worlduniting/bookpub#readme",
   "dependencies": {
+    "@likecoin/epubcheck-ts": "0.7.0",
+    "@xmldom/xmldom": "^0.8.15",
     "chalk": "^5.2.0",
     "commander": "^10.0.1",
+    "css-tree": "^3.2.1",
     "ejs": "^3.1.8",
     "express": "^5.1.0",
+    "fflate": "0.8.2",
     "fs-extra": "^11.1.1",
     "inquirer": "^9.2.3",
     "js-yaml": "^4.1.0",
@@ -79,8 +84,8 @@
     "src",
     "test"
   ],
-  "engine": {
-    "node": ">=14.0.0"
+  "engines": {
+    "node": ">=18.0.0"
   },
   "status": "BETA"
 }

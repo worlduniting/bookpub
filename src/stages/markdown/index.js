@@ -1,4 +1,4 @@
-import { exec } from 'child_process';
+import { runPandoc } from '../../utils/runPandoc.js';
 
 /**
  * @module markdownStage
@@ -57,19 +57,10 @@ export async function run(manuscript, { stageConfig }) {
   }
   const pandocPath = stageConfig.config.pandocPath;
 
-  const convertMarkdownToHTML = (markdown) =>
-    new Promise((resolve, reject) => {
-      const proc = exec(`${pandocPath} -f markdown -t html5`, (err, stdout) => {
-        if (err) return reject(err);
-        resolve(stdout);
-      });
-      proc.stdin.write(markdown);
-      proc.stdin.end();
-    });
-
   try {
-    const html = await convertMarkdownToHTML(manuscript.content);
+    const html = await runPandoc(pandocPath, ['-f', 'markdown', '-t', 'html5'], { input: manuscript.content });
     manuscript.content = html;
+    manuscript.pandocPath = pandocPath;
   } catch (err) {
     console.error("Error with Pandoc:", err);
     throw err;

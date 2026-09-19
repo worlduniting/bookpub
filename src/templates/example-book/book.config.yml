@@ -54,6 +54,20 @@ buildPipelines:
       - name: writeHtml
       - name: pdf
 
+  # Native EPUB 3 build. Errors or fatal validation findings fail the build.
+  epub:
+    stages:
+      - name: ejs
+      - name: markdown
+      - name: themes
+        config:
+          styleType: epub
+      - name: epub
+      - name: epubCheck
+        config:
+          failOnWarnings: false
+      - name: writeEpub
+
 # Add your own custom buildPipelines
 # pdf-lg:
 #   meta:
