@@ -29,7 +29,9 @@ import sass from 'sass';
  * - This file is compiled to CSS using Sass.
  * - The resulting CSS file is written as:
  *     /build/<buildType>/themes/css/styles.<buildType>.css
- * - No other files from the theme’s css folder are copied.
+ * - For EPUB styles, other files except Sass sources are copied too, so local
+ *   CSS imports and resources can be packaged into the archive.
+ * - Set config.styleType to reuse EPUB styles in a differently named pipeline.
  *
  * @param {Object} manuscript - The manuscript object containing:
  *   @param {string} manuscript.buildType - The current build type (e.g., 'html', 'pdf', etc.).
@@ -62,6 +64,8 @@ export async function run(manuscript, { stageConfig }) {
 
   // Determine the build type (e.g., html, pdf, etc.)
   const buildType = manuscript.buildType;
+  const styleType = stageConfig?.config?.styleType || buildType;
+  manuscript.themeStyleType = styleType;
 
   // Define the source directory for the selected theme.
   const themeSourceDir = path.join(process.cwd(), 'manuscript', 'themes', themeName);
@@ -88,7 +92,7 @@ export async function run(manuscript, { stageConfig }) {
 
   // Process the CSS folder separately.
   // Define the path to the source SCSS file for the current build type.
-  const sourceCssFile = path.join(themeSourceDir, 'css', `styles.${buildType}.scss`);
+  const sourceCssFile = path.join(themeSourceDir, 'css', `styles.${styleType}.scss`);
   if (!fs.existsSync(sourceCssFile)) {
     throw new Error(`The CSS styles file for build type "${buildType}" does not exist at ${sourceCssFile}.`);
   }
@@ -104,8 +108,15 @@ export async function run(manuscript, { stageConfig }) {
   // Ensure the output CSS directory exists.
   const outputCssDir = path.join(outputThemeDir, 'css');
   fse.ensureDirSync(outputCssDir);
+  // Sass leaves plain-CSS @imports untouched. EPUB packaging must be able to
+  // resolve those files and any resources stored alongside the source CSS.
+  if (styleType === 'epub') {
+    fse.copySync(path.join(themeSourceDir, 'css'), outputCssDir, {
+      filter: src => fs.statSync(src).isDirectory() || !/\.(?:scss|sass)$/i.test(src)
+    });
+  }
   // Define the output CSS file name.
-  const outputCssFile = path.join(outputCssDir, `styles.${buildType}.css`);
+  const outputCssFile = path.join(outputCssDir, `styles.${styleType}.css`);
   fs.writeFileSync(outputCssFile, result.css);
 
   console.log(`Copied theme "${themeName}" assets (excluding CSS) to: ${path.relative(process.cwd(), outputThemeDir)}`);

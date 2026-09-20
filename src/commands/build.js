@@ -4,6 +4,7 @@ import chalk from 'chalk';
 import fse from 'fs-extra';
 import YAML from 'js-yaml';
 import { importStage } from '../utils/importStage.js';
+import { epubPipeline } from '../pipelines/epub.js';
 
 /**
  * @module build
@@ -117,7 +118,14 @@ export async function build({ buildtype }) {
 async function runPipeline(chosenBuildType, config) {
   // Retrieve the pipeline configuration for the chosen build type.
   const userPipelines = config.buildPipelines || {};
-  const pipelineConfig = userPipelines[chosenBuildType] || {};
+  const pipelineConfig = {
+    ...(chosenBuildType === 'epub' ? epubPipeline : {}),
+    ...(userPipelines[chosenBuildType] || {})
+  };
+
+  if (!/^[a-z\d][a-z\d._-]*$/i.test(chosenBuildType)) {
+    throw new Error('Build pipeline names must start with a letter or number and contain only letters, numbers, dots, underscores or hyphens.');
+  }
 
   if (!pipelineConfig.stages) {
     throw new Error(
@@ -175,7 +183,7 @@ async function runPipeline(chosenBuildType, config) {
         globalConfig: { meta: mergedMeta }
       });
     } else {
-      console.warn(chalk.yellow(`No 'run' function found for stage: ${stageName}. Skipping...`));
+      throw new Error(`No 'run' function found for stage: ${stageName}.`);
     }
   }
 

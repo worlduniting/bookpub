@@ -37,11 +37,15 @@ A lightweight book publishing cli framework providing customizable pipelines wit
   - Pre-Defined Build Pipelines:
     - **HTML** - Creates an HTML build of your book.
     - **PDF** - Creates a PDF build of your book.
+    - **EPUB** - Creates an EPUB 3 book and validates the finished archive before writing the final output.
   - Pre-Built Stages:  
     - **ejs** (EJS to Markdown)  
     - **markdown** (Markdown to HTML using Pandoc)  
     - **themes** (SCSS to CSS using SASS and coping assets)  
     - **pdf** (html/css/js to PDF using PrinceXML)
+    - **epub** (HTML to an EPUB 3 archive using Pandoc)
+    - **epubCheck** (archive validation using epubcheck-ts and its bundled WebAssembly XML engine)
+    - **writeEpub** (writes the completed EPUB and validation report to the build folder)
 - **Extend or Override**:
   - Drop in your own custom **stages**
   - Define new build pipelines and their stages.
@@ -56,6 +60,11 @@ A lightweight book publishing cli framework providing customizable pipelines wit
 
 ## Pre-Requisites
 
+Use **Node.js 18 or newer**. EPUB creation uses **Pandoc 3.1 or newer**. A normal
+`npm install` installs `@likecoin/epubcheck-ts` and its `libxml2-wasm` dependency,
+including the precompiled WebAssembly payload. Validation needs no Java, native
+compiler, manual WASM download, or network connection after installation.
+
 1. **Installing Pandoc**
 
     bookpub uses pandoc in its built-in markdown stage
@@ -64,6 +73,8 @@ A lightweight book publishing cli framework providing customizable pipelines wit
     Please visit the [Pandoc Installation Page](https://pandoc.org/installing.html) for directions on installing Pandoc on your operating system
 
 2. **Installing PrinceXML**
+
+    PrinceXML is needed only for PDF builds, not EPUB builds.
 
     bookpub uses princexml (an advanced PDF typesetting library) in its built-in pdf stage
     * (You can easily use something else, by visiting the [Overriding or Adding Stages](#overriding-or-adding-stages) section)
@@ -157,6 +168,112 @@ buildPipelines:
 ```
 
 Now `bookpub build pdf` will run the pdf build-pipeline and execute these stages in order: `ejs > markdown > themes > writeHtml > pdf `.
+
+### Native EPUB pipeline
+
+```bash
+bookpub build epub
+```
+
+The built-in `epub` pipeline is available even in existing projects that do not
+list it in `buildPipelines`. It uses these independently replaceable stages:
+
+```yaml
+buildPipelines:
+  epub:
+    stages:
+      - name: ejs
+      - name: markdown
+      - name: themes
+        config:
+          styleType: epub
+      - name: epub
+      - name: epubCheck
+      - name: writeEpub
+```
+
+The command succeeds only after the **finished archive** passes `epubcheck-ts`.
+Errors, fatal findings, and failures to run the validator exit with a nonzero
+status and stop the pipeline. Validation warnings are printed but do not fail
+by default. To make them fatal, configure the check stage:
+
+```yaml
+global:
+  stages:
+    - name: epubCheck
+      config:
+        failOnWarnings: true
+```
+
+Successful builds write `build/epub/book.epub` and `build/epub/epubcheck.json`.
+The report identifies the validation engine/version and includes its diagnostic
+messages, paths, line numbers when available, and error/warning counts. On
+failure, the terminal identifies the archive and diagnostics retained under
+`.bookpub/epub/`. No final EPUB is written. Add `.bookpub/` and `build/` to your
+project's `.gitignore` (newly scaffolded projects already do this).
+
+The default pipeline reads the usual EJS manuscript, merged global/pipeline
+metadata, and the selected theme's `css/styles.epub.scss`. Both `title` and
+`language` are required metadata. `author`, `subtitle`, `description`,
+`publisher`, `rights`, `date`, and `identifier` are passed through to Pandoc;
+`language` maps to Pandoc's `lang`. If no identifier is supplied, an available
+`isbn-13`, `isbn`, or `isbn-10` is used, otherwise Pandoc creates a UUID.
+For a stable identifier across builds, set `global.meta.identifier` explicitly.
+
+Pandoc generates the package document, navigation, reading order and XHTML,
+and embeds the manuscript's images. Relative media paths are searched in the
+pipeline build folder, `manuscript/`, and the project root. Use
+`themes/images/...` for theme images. Local stylesheet imports, CSS images, and
+TTF/OTF/WOFF/WOFF2 fonts are packaged with rewritten references and manifest
+entries. Missing resources stop the build; Pandoc conversion warnings also stop
+generation so an omitted image cannot silently produce an incomplete book.
+Use reflowable EPUB styles: print page sizes, page counters and Prince-specific
+layout rules are generally inappropriate for ebook readers.
+
+The `epub` stage accepts these options under `config`:
+
+| Option | Default | Purpose |
+| --- | --- | --- |
+| `outputFile` | `book.epub` | Output filename, without directories |
+| `pandocPath` | The markdown stage's executable, or `pandoc` | Pandoc executable path; paths with spaces are supported |
+| `chapterLevel` | `1` | Heading level for splitting chapters, from 1 to 6 |
+| `tocDepth` | `3` | Navigation heading depth, from 1 to 6 |
+| `titlePage` | `false` | Generate an extra title page; manuscripts often already contain one |
+| `coverImage` | None | Project-relative path to a separate EPUB cover image |
+| `css` | The theme's compiled EPUB stylesheet | Project-relative CSS file, array of files, or `[]` for Pandoc defaults |
+
+For example, add `config: { outputFile: over-coffee.epub }` to the `epub` stage.
+An explicit `coverImage` adds a separate cover page; omit an existing manuscript
+cover for that build if you want to avoid repeating it.
+
+An unchecked custom pipeline can reuse the same creation and output stages:
+
+```yaml
+buildPipelines:
+  epub-unchecked:
+    stages:
+      - name: ejs
+      - name: markdown
+      - name: themes
+        config:
+          styleType: epub
+      - name: epub
+      - name: writeEpub
+```
+
+Run it with `bookpub build epub-unchecked`. There is no skip-check switch on the
+default pipeline. You can also reuse `epubCheck` in a separate custom pipeline,
+setting `config.inputFile` to an existing EPUB; the report is then written
+alongside it as `<filename>.check.json`. As before, `bookpub build all` runs the
+pipelines explicitly listed in your project configuration.
+
+Passing this check means passing the installed **epubcheck-ts** engine. It is
+not a claim of complete equivalence to official Java EPUBCheck; see the
+[validator's documented compatibility and limitations](https://github.com/likecoin/epubcheck-ts/blob/master/PROJECT_STATUS.md).
+
+To run the integration suite (requires Pandoc), use `npm run test:epub`. It
+builds real books and exercises validation failures, custom pipelines, CSS
+assets, metadata, cover images, and the shipped example.
 
 ### Defining Custom Pipelines in `book.config.yml`
 

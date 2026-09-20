@@ -8,11 +8,13 @@
 
 <body>
 <!-- A page for the well-deserved PrinceXML logo -->
+<% if (buildType === 'pdf') { %>
 <div class="blankpage"></div>
+<% } %>
 
 <div class="frontcover">
 
-<img src="themes/images/cover.jpg" />
+<img src="themes/images/cover.jpg" alt="Cover of <%= meta.title %>" />
 
 </div>
 

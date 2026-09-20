@@ -1,2 +1,6 @@
 # Place files/firs that you don't want in your repository
 
+
+# Generated books and retained EPUB diagnostics
+build/
+.bookpub/

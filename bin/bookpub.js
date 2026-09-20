@@ -29,7 +29,6 @@ import { program } from 'commander';
 import chalk from 'chalk';
 import { build } from '../src/commands/build.js';
 import { newProject } from '../src/commands/new.js';
-import { dev } from '../src/commands/dev.js';
 
 program
   .name('bookpub')
@@ -75,6 +74,7 @@ program
                     * Serve the build asset via browser localhost:3000
                     * Watch for changes and live reload\n`)
   .action(async (buildType) => {
+    const { dev } = await import('../src/commands/dev.js');
     await dev(buildType);
   });
 
